@@ -34,17 +34,26 @@ ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS")]
 # Application definition
 
 INSTALLED_APPS = [
+    # Builtin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # REST Framework
     'rest_framework',
 
+    #Simple JWT
+    'rest_framework_simplejwt',
+
+    #Corsheaders
+    "corsheaders",
+
     #DUO
     'discordauth.apps.DiscordauthConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -88,7 +97,7 @@ DATABASES = {
     }
 }
 
-
+AUTH_USER_MODEL = 'discordauth.User'
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -129,3 +138,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+# Discord
+DISCORD_CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
+DISCORD_CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
+DISCORD_REDIRECT_URI = os.getenv('DISCORD_REDIRECT_URI')
+
+# Corsheaders
+CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', default='True') == 'True'
+
