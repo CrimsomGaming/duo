@@ -27,9 +27,16 @@ class RefreshTokenAPIView(APITestCase):
     def test_view_shall_return_tokens_on_valid_token(self):
         r = self.client.post(self.url, data={'refresh': self.refresh_token})
         self.assertEqual(r.status_code, status.HTTP_200_OK)
-        self.assertEqual(list(r.data.keys()), ['access'])
+        self.assertEqual(list(r.data.keys()), ['access', 'refresh'])
     
     def test_view_shall_return_unauthorized_on_invalid_token(self):
         r = self.client.post(self.url, data={'refresh': 'fakeToken'})
         self.assertEqual(r.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_view_shall_return_unauthorized_on_used_tokens(self):
+        self.client.post(self.url, data={'refresh': self.refresh_token})
+        # Reutilizando o token
+        r = self.client.post(self.url, data={'refresh': self.refresh_token})
+        self.assertEqual(r.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(r.data.get('detail'), 'Token está na blacklist')
 
