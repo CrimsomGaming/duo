@@ -3,21 +3,37 @@ import axios from "axios";
 import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 import { NextRequest, NextResponse } from "next/server";
 
+interface AuthResponseProps {
+    refresh: string;
+    access: string;
+}
+
 export async function GET(request: NextRequest ){
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
 
-   console.log(code)
 
-    const redirectURL = new URL('/', request.url)
+    const redirectURL = new URL('/home', request.url)
 
-    const reponse = await axios.post('http://localhost:8000/auth/login/',{
+    const authResponse = await axios.post<AuthResponseProps>('http://localhost:8000/auth/login/',{
         code: code,
     })
 
-    console.log(reponse.data)
+    const {access,refresh} = authResponse.data
 
-    return NextResponse.redirect(redirectURL)
+   
+
+    const cookieExpiration = 60 * 60 * 24 * 30 // 30 days
+
+    return NextResponse.redirect(redirectURL, {
+        headers: {
+          'Set-Cookie': [
+            `token=${access}; Path=/;  max-age=${cookieExpiration}`,
+            `refresh-token=${refresh}; Path=/;  max-age=${cookieExpiration}`
+          ] as any,
+           
+        }
+    })
 
     
   
