@@ -4,6 +4,16 @@
 
 
 
-body {
 
+
+* {
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
 }
+
+body, input, html {
+    color: #fff
+}
+
+

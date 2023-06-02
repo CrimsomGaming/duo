@@ -7,11 +7,21 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+       backgroundImage:{
+        galaxy: "url('/backgroundGalaxy.png')",
+        'nlw-gradient': "linear-gradient(89.86deg, #9572FC 23.08%, #43E7AD 33.94%, #E1D55D 44.57%)",
+        'game-gradient': " linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 67.08%);"
       },
+      colors: {
+        gray900: '#121214'
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+  
+      },
+    fontSize: {
+      'text-3.5xl': '2rem'
+    }
     },
   },
   plugins: [],
