@@ -10,10 +10,25 @@
     -webkit-font-smoothing: antialiased;
     box-sizing: border-box;
     text-rendering: optimizeLegibility;
+
+    
+}
+
+*:focus {
+    boxShadow: '0px 0px 0px 2px #00875F',
 }
 
 body, input, html {
     color: #fff
 }
+
+
+
+@media screen and (min-width: 720px) {
+    html {
+        font-size: 85%
+    }
+}
+
 
 
