@@ -1,0 +1,3 @@
+./application/db.sqlite3
+./application/.coverage
+./venv
