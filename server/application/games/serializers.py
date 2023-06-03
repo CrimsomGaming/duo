@@ -3,9 +3,9 @@ from .models import Game
 
 
 class GameSerializer(serializers.ModelSerializer):
-    ann_count = serializers.IntegerField()
+    ads_count = serializers.IntegerField()
 
     class Meta:
         model = Game
-        fields = ['id', 'name', 'image', 'ann_count']
+        fields = ['id', 'name', 'image', 'ads_count']
 
