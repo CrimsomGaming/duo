@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import { Text } from "./Text";
 import { GAME_DTO } from "@/DTO/GAME_DTO";

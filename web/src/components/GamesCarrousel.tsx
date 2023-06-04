@@ -26,7 +26,7 @@ export function GamesCarousell({games }: GamesCaroutsellProps){
             },
             '(max-width: 767px)': {
                 slides: {
-                    perView: 3,
+                    perView: 3.2,
                     spacing: 16,
 
                 }
@@ -34,7 +34,7 @@ export function GamesCarousell({games }: GamesCaroutsellProps){
 
             '(max-width: 480px)': {
                 slides: {
-                    perView: 1,
+                    perView: 1.1,
                     spacing: 16,
 
                 }
@@ -59,18 +59,19 @@ export function GamesCarousell({games }: GamesCaroutsellProps){
     }
 
     return (
-        <div className="relative    ">
+        <div className="relative  ">
             <button
                 title="jogos anteriores" 
                 onClick={handleScrollToPreviousSlide}
-                className=" absolute -left-16 top-1/2 -translate-y-1/2 z-10"
+                className=" absolute -left-14  top-1/2 -translate-y-1/2 z-10 max-sm:hidden"
             >
                 <ChevronLeft className="text-zinc-400" size={48}/>
             </button>
             <button
+                
                 title="jogos posteriores" 
                 onClick={handleScrollToNextSlide}
-                className="absolute -right-16 z-20  top-1/2 -translate-y-1/2"
+                className="absolute  -right-14 z-20  top-1/2 -translate-y-1/2 max-sm:hidden"
             >
                 <ChevronRight className="text-zinc-400" size={48} />
             </button>

@@ -11,9 +11,9 @@ import { games } from '@/utils/games'
 
 export default function Home() {
     return (
-        <div className="max-w-[1344px] mx-auto flex flex-col items-center  min-h-screen justify-center">
+        <div className="max-w-[1424px] px-10 mx-auto flex flex-col items-center  min-h-screen justify-center max-sm:px-0">
 
-            <Heading size='6xl'  asChild>
+            <Heading size='6xl' className='max-md:text-4xl'  asChild>
                 <h1 >
                     Seu <span className="text-transparent  bg-nlw-gradient bg-clip-text">duo</span> está aqui.
                 </h1>

@@ -24,9 +24,9 @@ body, input, html {
 
 
 
-@media screen and (min-width: 720px) {
+@media screen and (max-width: 720px) {
     html {
-        font-size: 85%
+        font-size: 80%
     }
 }
 
