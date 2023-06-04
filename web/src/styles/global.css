@@ -14,12 +14,16 @@
     
 }
 
-*:focus {
-    boxShadow: '0px 0px 0px 2px #00875F',
+*:focus, *:focus-visible{
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(100 116 139) 
 }
 
+
+
+
 body, input, html {
-    color: #fff
+    color: #fff;
 }
 
 
