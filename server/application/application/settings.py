@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 
     #DUO
     'discordauth.apps.DiscordauthConfig',
-
+    'games.apps.GamesConfig',
 ]
 
 MIDDLEWARE = [
