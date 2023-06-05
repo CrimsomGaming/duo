@@ -46,4 +46,22 @@ class UserModelTestCase(APITestCase):
             f'https://cdn.discordapp.com/avatars/999999/atavar'
         )
         self.assertEqual(user.image, expected_url)
+    
+    def test_superuser_creation(self):
+        superuser = User.objects.create_superuser(
+            id=1,
+            admin_username='admin',
+            password='password'
+        )
+        self.assertIsInstance(superuser, User)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_superuser_has_extra_permissions(self):
+        superuser = User.objects.create_superuser(
+            id=1,
+            admin_username='admin',
+            password='password'
+        )
+        self.assertTrue(superuser.is_superuser)
+        self.assertTrue(superuser.is_staff)
 

@@ -11,14 +11,24 @@ class User(AbstractBaseUser):
     global_name = models.CharField(max_length=64, null=True, blank=True)
     avatar = models.CharField(max_length=32)
     discriminator = models.CharField(max_length=4)
-    password = None
+    password = models.CharField(max_length=128, null=True, blank=True)
     objects = CustomUserManager()
+
+    admin_username = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     
-    USERNAME_FIELD = "id"
-    REQUIRED_FIELDS = ()
+    USERNAME_FIELD = "admin_username"
+    REQUIRED_FIELDS = ["id"]
 
     def __str__(self):
         return self.gamer_tag
+
+    def has_perm(self, perm, obj=None):
+        return self.is_staff
+
+    def has_module_perms(self, app_label):
+        return self.is_staff
 
     @property
     def gamer_tag(self):
