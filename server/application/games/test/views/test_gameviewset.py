@@ -17,7 +17,7 @@ class GameViewSetTestCase(APITestCase):
             'game_id': 1,
             'nickname': 'testnickname',
             'play_since': 1,
-            'play_weekdays': ['SUN', 'SAT'],
+            'play_weekdays': ['SAT', 'sun'],
             'play_period_start': time(8),
             'play_period_end': time(12),
             'voice_chat': True

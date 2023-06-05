@@ -34,6 +34,7 @@ class NewAnnounceSerializer(serializers.Serializer):
     def validate_play_weekdays(self, weekdays):
         VALID_WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
         for day in weekdays:
+            day = day.upper()
             if day in VALID_WEEKDAYS:
                 continue
 
@@ -46,7 +47,7 @@ class NewAnnounceSerializer(serializers.Serializer):
         para cada nome na lista retorna o primeiro argumento da 
         tupla de "get_or_create" que é uma instancia de Weekday 
         """
-        return [Weekday.objects.get_or_create(name=f"{day_name}")[0]
+        return [Weekday.objects.get_or_create(name=f"{day_name.upper()}")[0]
                 for day_name in weekdays]
 
     def save(self):
