@@ -67,6 +67,8 @@ class LoginAPIView(APIView):
         user_data = self.get_user_data(user_tokens)
         user = self.get_user(user_data)
         refresh = RefreshToken().for_user(user)
+        refresh['username'] = user.username
+        refresh['user_image'] = user.image
 
         return Response(
             {'refresh': str(refresh),

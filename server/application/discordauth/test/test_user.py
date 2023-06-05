@@ -40,3 +40,10 @@ class UserModelTestCase(APITestCase):
         user = User.objects.create_user(self.default_user_data)
         self.assertEqual(str(user), 'someusername#0000')
 
+    def test_user_image_property(self):
+        user = User.objects.create_user(self.default_user_data)
+        expected_url = (
+            f'https://cdn.discordapp.com/avatars/999999/atavar'
+        )
+        self.assertEqual(user.image, expected_url)
+

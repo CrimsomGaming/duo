@@ -25,3 +25,9 @@ class User(AbstractBaseUser):
         gamer_tag = f'{self.username}#{self.discriminator}'
         return gamer_tag
 
+    @property
+    def image(self):
+        return (
+            f'https://cdn.discordapp.com/avatars/{self.id}/{self.avatar}'
+        )
+
