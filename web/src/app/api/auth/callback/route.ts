@@ -15,7 +15,7 @@ export async function GET(request: NextRequest ){
 
     const redirectURL = new URL('/home', request.url)
 
-    const authResponse = await axios.post<AuthResponseProps>('http://localhost:8000/auth/login/',{
+    const authResponse = await api.post<AuthResponseProps>('/auth/login/',{
         code: code,
     })
 

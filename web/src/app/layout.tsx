@@ -23,8 +23,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br"  className={`${inter.variable}`}>
-      <body className={`${inter.variable} px-5   bg-gray900 bg-galaxy bg-cover bg-no-repeat`}>
-        <div className=' max-w-[1334px] mx-auto ' >
+      <body className={`${inter.variable} px-5   bg-gray900 bg-galaxy bg-cover bg-no-repeat `}>
+        <div className='  mx-auto ' >
           {children}
         </div>
       </body>
