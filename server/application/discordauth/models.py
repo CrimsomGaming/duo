@@ -19,7 +19,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     
     USERNAME_FIELD = "admin_username"
-    REQUIRED_FIELDS = ["id"]
+    REQUIRED_FIELDS = ["id", "password"]
 
     def __str__(self):
         return self.gamer_tag

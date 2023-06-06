@@ -1,3 +1,4 @@
 ./application/db.sqlite3
 ./application/.coverage
+./application/media/
 ./venv
