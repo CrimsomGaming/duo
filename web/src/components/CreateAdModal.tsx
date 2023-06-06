@@ -1,10 +1,15 @@
-import * as Dialog from '@radix-ui/react-dialog';
-
-import { WeekDaysSelector } from './WeekDaysSelector';
+import { z } from 'zod';
 
 import {Gamepad2} from 'lucide-react'
-import { Checkbox } from './Form/Checkbox';
+import { useForm,   Controller} from 'react-hook-form';
+
 import { TextInput } from './Form/Input';
+import { Checkbox } from './Form/Checkbox';
+import { WeekDaysSelector } from './WeekDaysSelector';
+
+import * as Dialog from '@radix-ui/react-dialog';
+import {zodResolver} from '@hookform/resolvers/zod'
+import { weekdaysFormated } from '@/utils/weekDays';
 
 interface Game {
     id: string,
@@ -14,7 +19,68 @@ interface CreateAdModalProps {
     games: Game[]
 }
 
+const newGameAdFormSchema = z.object({
+    nickname: z.string({ required_error: 'Preecha o seu nickName.' }).min(2, 'O nickname deve conter pelo menos 2 caracteres.'),
+    gameId: z.string({required_error:'Selecione um jogo'}),
+    timePlayed: z.coerce.number({ required_error: 'Nos Conte a quanto tempo você joga.' }),
+    startHour: z.string(),
+    endHour: z.string(),
+    enableChatVoice: z.boolean().default(false).optional(),
+    weekDays: z.array(z.object({
+        value: z.string(),
+        isChecked: z.boolean(),
+        label: z.string()
+    })).refine(weekdays => weekdays.some(day=> day.isChecked === true), {
+        message: 'preencha pelo menos um dia da semana'  
+    } )
+    .transform(weekdays => weekdays.filter(day => day.isChecked))
+    .transform(weekdays => weekdays.map(day => day.value))
+})
+
+type newGameAdFormSchemaData = z.input < typeof newGameAdFormSchema>
+
 export function CreateAdModal({ games }: CreateAdModalProps) {
+    const { formState, register, watch, setValue, handleSubmit, control} = useForm<newGameAdFormSchemaData>({
+        resolver: zodResolver(newGameAdFormSchema),
+        defaultValues: {
+            weekDays: weekdaysFormated.map(weekday => {
+                return {
+                    isChecked: weekday.isChecked,
+                    label: weekday.label,
+                    value: weekday.value
+
+                }
+            })
+        }
+    })
+    const { errors, isSubmitting} = formState
+
+    const weekDays = watch('weekDays')
+
+    function handleUpdateWeekDay(weekDaysChecked: string[]){
+        
+        const weekDaysUpdated = weekDays.map(day => {
+            const dayIsChecked = weekDaysChecked.includes(day.value)
+            if(dayIsChecked){ 
+                return {
+                    ...day,
+                    isChecked: true
+                }
+            }
+            return {
+                ...day,
+                isChecked: false
+            }
+        })
+    
+        setValue('weekDays', weekDaysUpdated)
+    }
+
+  
+    function handleCreateNewAd(formData: newGameAdFormSchemaData){
+        console.log(formData)
+    }
+
    
     return (
         <Dialog.Portal>
@@ -29,19 +95,19 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
           '
             >
                 <Dialog.Title className='text-[2rem] font-black '>Publique um anúncio</Dialog.Title>
-                <form  className='mt-8 '>
+                <form onSubmit={handleSubmit(handleCreateNewAd)}  className='mt-8 '>
                     <section className='flex gap-y-4 flex-col'>
-                    
-
                         <div className='flex flex-col gap-y-2 '>
                             <label htmlFor="game" className='font-semibold'>Qual o game?</label>
                             <select
-                                id="gameId"
-                                name='gameId'
-                                defaultValue={''}
+                                {...register('gameId')}
+                                placeholder='Selecione o game que deseja jogar'
+                             
+                          
+                               
                                 className='py-3 px-4 bg-zinc-900 text-sm placeholder:text-zinc-500 rounded-[4px] appearance-none focus:ring-gray-500 focus:border-gray-500'
                             >
-                                <option disabled value="">Selecione o game que deseja jogar</option>
+                                <option disabled value="ddddd">Selecione o game que deseja jogar</option>
                                 {
                                     games.map(game => (
                                         <option key={game.id} value={game.id}>{game.title}</option>
@@ -49,6 +115,9 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 }
 
                             </select>
+                            {errors.gameId && errors.gameId.message && (
+                                <span className='text-sm mt-1 bg-red-500'>{errors.gameId.message}</span>
+                            )}
                         </div>
 
                         
@@ -56,9 +125,14 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                         <TextInput.Root>
                             <TextInput.Title>Seu nome (ou nickname)</TextInput.Title>
                             <TextInput.Input  
+                                {...register('nickname')}
                                 autoComplete='off'
+
                                 placeholder='Como te chamam dentro do game?'
                             />
+                            {errors.nickname && errors.nickname.message && (
+                                <TextInput.Error>{errors.nickname.message}</TextInput.Error>
+                            )}
                         </TextInput.Root>
 
                       
@@ -67,13 +141,15 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                         <TextInput.Root>
                             <TextInput.Title>Joga há quantos anos?</TextInput.Title>
                             <TextInput.Input
+                                {...register('timePlayed')}
                                 type="number"
-                                id='yearsPlaying'
-                                name='yearsPlaying'
                                 min={0}
                                 max={70}
                                 placeholder='Tudo bem ser ZERO'
                             />
+                            {errors.timePlayed && errors.timePlayed.message && (
+                                <TextInput.Error>{errors.timePlayed.message}</TextInput.Error>
+                            )}
                         </TextInput.Root>
 
                           
@@ -82,8 +158,11 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 <label htmlFor="weekDays" className='font-semibold'>Quando costuma jogar?</label>
 
                                 <WeekDaysSelector
-                                    updateWeekDays={() => {}}
-                                    weekDays={['']}
+                                    updateWeekDay={handleUpdateWeekDay}
+                                    weekDays={weekDays}
+                                    error={errors.weekDays?.message}
+
+                                  
                                 />
 
                             </div>
@@ -92,6 +171,8 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 <label className='font-semibold'>Qual horário do dia</label>
                                 <div className='grid grid-cols-2  gap-x-2'>
                                     <TextInput.Input
+
+                                        {...register('startHour')}
                                         type="time"
                                         defaultValue={'08:00'}
                                         name="hourStart"
@@ -102,6 +183,7 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                     />
 
                                     <TextInput.Input
+                                        {...register('endHour')}
                                         type="time"
                                         name='hourEnd'
                                         id='hourEnd'
@@ -115,7 +197,14 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                         </div>
                     </section>
                     <label className='mt-6 flex gap-x-2 text-sm items-center' >
-                        <Checkbox/>
+                        <Controller
+                            control={control}
+                            name='enableChatVoice'
+                            render={({field:{onChange}}) => (
+                                <Checkbox onCheckedChange={onChange}  />
+
+                            )}
+                        />
                         <span>Costumo me conectar ao chat de voz</span>
                     </label>
                     <footer className='flex justify-end gap-x-4 mt-8'>

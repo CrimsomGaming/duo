@@ -1,67 +1,58 @@
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
+import { Text } from "./Text";
 
-
-type WeekDaysProps = string[]
+interface weekDaysProps {
+   
+    isChecked: boolean;
+    value: string;
+    label: string
+}
 
 interface WeekDaysSelectorProps {
-    weekDays: WeekDaysProps,
-    updateWeekDays: (weekDaysUpdated: WeekDaysProps) => void
+    weekDays: weekDaysProps[],
+    updateWeekDay: (weekDaysChecked: string[]) => void;
+    error?: string;
+   
 }
 
 
-export function WeekDaysSelector({ updateWeekDays, weekDays }: WeekDaysSelectorProps) {
-    function handleUpdateWeekDays(weekDaysUpdated: WeekDaysProps) {
-        updateWeekDays(weekDaysUpdated)
+export function WeekDaysSelector({ updateWeekDay, weekDays, error }: WeekDaysSelectorProps) {
+    function handleUpdateWeekDays(weedaysChecked: string[]) {
+       
+        updateWeekDay(weedaysChecked)
     }
+    
 
     return (
-        <ToggleGroup.Root
-            type='multiple'
-            className='grid grid-cols-4 gap-1'
-            defaultValue={weekDays}
-            onValueChange={handleUpdateWeekDays}
-        >
-            <ToggleGroup.Item
-                value='0'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('0') && 'bg-violet-600'}`}
-                title='domingo'>D
-            </ToggleGroup.Item>
+        <>
+            <ToggleGroup.Root
+                type='multiple'
+                className='grid grid-cols-4 gap-1'
+        onValueChange={weedaysChecked => handleUpdateWeekDays(weedaysChecked)}
+            >
+                {
+                    weekDays.map((weekDay,index) => (
+                        <ToggleGroup.Item
+                            className={`w-8 h-8 rounded font-bold ${weekDay.isChecked ? 'bg-violet-600' : 'bg-zinc-900 '}`}
+                            key={index}
+                            value={String(weekDay.value)}>
+                            {weekDay.label[0].toUpperCase()}
 
-            <ToggleGroup.Item
-                value='1'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('1') && 'bg-violet-600'}`}
-                title='segunda'>S
-            </ToggleGroup.Item>
+                        </ToggleGroup.Item>
+                    ))
+                }
+                
 
-            <ToggleGroup.Item
-                value='2'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('2') && 'bg-violet-600'}`}
-                title='terça'>T
-            </ToggleGroup.Item>
-
-            <ToggleGroup.Item
-                value='3'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('3') && 'bg-violet-600'}`}
-                title='quarta'>Q
-            </ToggleGroup.Item>
-
-            <ToggleGroup.Item
-                value='4'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('4') && 'bg-violet-600'}`}
-                title='quinta'>Q
-            </ToggleGroup.Item>
-
-            <ToggleGroup.Item
-                value='5'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('5') && 'bg-violet-600'}`}
-                title='sexta'>S
-            </ToggleGroup.Item>
-
-            <ToggleGroup.Item
-                value='6'
-                className={`w-8 h-8 bg-zinc-900 rounded font-bold ${weekDays.includes('6') && 'bg-violet-600'}`}
-                title='sábado'>S
-            </ToggleGroup.Item>
-        </ToggleGroup.Root>
+            
+            </ToggleGroup.Root>
+            {
+                error && (
+                    <Text size="sm" className="text-red-500 block max-w-[180px]">
+                        {error}
+                    </Text>
+                )
+            }
+        
+        </>
     )
 }
