@@ -1,23 +1,18 @@
 import { z } from 'zod';
 
 import {Gamepad2} from 'lucide-react'
+import { useEffect, useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import {zodResolver} from '@hookform/resolvers/zod'
 import { useForm,   Controller} from 'react-hook-form';
 
 import { TextInput } from './Form/Input';
 import { Checkbox } from './Form/Checkbox';
 import { WeekDaysSelector } from './WeekDaysSelector';
 
-import * as Dialog from '@radix-ui/react-dialog';
-import {zodResolver} from '@hookform/resolvers/zod'
+import { api } from '@/libs/api';
+import { GAME_DTO } from '@/DTO/GAME_DTO';
 import { weekdaysFormated } from '@/utils/weekDays';
-
-interface Game {
-    id: string,
-    title: string
-}
-interface CreateAdModalProps {
-    games: Game[]
-}
 
 const newGameAdFormSchema = z.object({
     nickname: z.string({ required_error: 'Preecha o seu nickName.' }).min(2, 'O nickname deve conter pelo menos 2 caracteres.'),
@@ -25,7 +20,7 @@ const newGameAdFormSchema = z.object({
     timePlayed: z.coerce.number({ required_error: 'Nos Conte a quanto tempo você joga.' }),
     startHour: z.string(),
     endHour: z.string(),
-    enableChatVoice: z.boolean().default(false).optional(),
+    enableChatVoice: z.boolean().default(false),
     weekDays: z.array(z.object({
         value: z.string(),
         isChecked: z.boolean(),
@@ -39,7 +34,13 @@ const newGameAdFormSchema = z.object({
 
 type newGameAdFormSchemaData = z.input < typeof newGameAdFormSchema>
 
-export function CreateAdModal({ games }: CreateAdModalProps) {
+export  function CreateAdModal() {
+    const [games,setGames] = useState<GAME_DTO[]>([])
+    async function fetchGames(){
+        const response = await api.get('/games/')
+        setGames(response.data)
+    }
+
     const { formState, register, watch, setValue, handleSubmit, control} = useForm<newGameAdFormSchemaData>({
         resolver: zodResolver(newGameAdFormSchema),
         defaultValues: {
@@ -53,6 +54,7 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
             })
         }
     })
+    
     const { errors, isSubmitting} = formState
 
     const weekDays = watch('weekDays')
@@ -80,6 +82,8 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
     function handleCreateNewAd(formData: newGameAdFormSchemaData){
         console.log(formData)
     }
+
+    useEffect(() => {fetchGames()},[])
 
    
     return (
@@ -110,7 +114,7 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 <option disabled value="ddddd">Selecione o game que deseja jogar</option>
                                 {
                                     games.map(game => (
-                                        <option key={game.id} value={game.id}>{game.title}</option>
+                                        <option key={game.id} value={game.id}>{game.name}</option>
                                     ))
                                 }
 
@@ -119,8 +123,6 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 <span className='text-sm mt-1 bg-red-500'>{errors.gameId.message}</span>
                             )}
                         </div>
-
-                        
 
                         <TextInput.Root>
                             <TextInput.Title>Seu nome (ou nickname)</TextInput.Title>
@@ -135,9 +137,6 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                             )}
                         </TextInput.Root>
 
-                      
-
-                        
                         <TextInput.Root>
                             <TextInput.Title>Joga há quantos anos?</TextInput.Title>
                             <TextInput.Input
@@ -171,7 +170,6 @@ export function CreateAdModal({ games }: CreateAdModalProps) {
                                 <label className='font-semibold'>Qual horário do dia</label>
                                 <div className='grid grid-cols-2  gap-x-2'>
                                     <TextInput.Input
-
                                         {...register('startHour')}
                                         type="time"
                                         defaultValue={'08:00'}

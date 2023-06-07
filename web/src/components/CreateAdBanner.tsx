@@ -1,13 +1,12 @@
 'use client'
 
 import { ZoomIn } from 'lucide-react'
+import * as Dialog from '@radix-ui/react-dialog'
 
 import { Text } from './Text'
 import { Button } from './Button'
 import { Heading } from './Heading'
-import * as Dialog from '@radix-ui/react-dialog'
 import { CreateAdModal } from './CreateAdModal'
-import { games } from '@/utils/games'
 
 export function CreateAdBanner() {
     return (
@@ -35,7 +34,7 @@ export function CreateAdBanner() {
                             <span className='text-white font-medium text-lg '>Publicar anúncio</span>
                         </Button>
                     </Dialog.Trigger>
-                    <CreateAdModal games={games}/>
+                    <CreateAdModal/>
                 </Dialog.Root>
           
             </div>

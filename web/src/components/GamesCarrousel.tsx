@@ -4,17 +4,15 @@ import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from "keen-slider/react"
 import {ChevronLeft,  ChevronRight} from 'lucide-react'
 
-
 import { GameBanner } from "./GameBanner"
 import { GAME_DTO } from '@/DTO/GAME_DTO'
-import { games } from '@/utils/games'
 
-interface GamesCaroutsellProps {
-    games:  GAME_DTO[]
+interface GamesCarousellProps {
+    games: GAME_DTO[]
 }
 
-export function GamesCarousell({games }: GamesCaroutsellProps){
-  
+export function GamesCarousell({games }: GamesCarousellProps){
+    
     const [sliderRef, instanceRef] = useKeenSlider({
         breakpoints: {
             '(max-width: 991px)': {
@@ -75,20 +73,21 @@ export function GamesCarousell({games }: GamesCaroutsellProps){
             >
                 <ChevronRight className="text-zinc-400" size={48} />
             </button>
-            <div ref={sliderRef} className="keen-slider relative ">
-                
-                {games.map(game => {
-                    return (
-                        <GameBanner
-                            id={game.id}
-                            key={game.id}
-                            title={game.title}
-                            bannerUrl={game.bannerUrl}
-                            adsCount={game.adsCount}
-                        />
-                    )
-                })}
-            </div>
+                <div ref={sliderRef} className="keen-slider relative ">
+                    
+                    {games.map(game => {
+                        return (
+                            <GameBanner
+                                id={game.id}
+                                key={game.id}
+                                name={game.name}
+                                image={game.image}
+                                ads_count={game.ads_count}
+                            />
+                        )
+                    })}
+                </div>
+           
         </div>
         )
 }
