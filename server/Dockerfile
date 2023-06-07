@@ -14,5 +14,7 @@ EXPOSE 8000
 
 RUN python manage.py migrate
 RUN python manage.py createsuperuser --admin_username=admin --id=1 --password=0000 --noinput
+RUN python manage.py seed_users
+RUN python manage.py seed_games
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
