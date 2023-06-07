@@ -22,7 +22,7 @@ class GameViewSetTestCase(APITestCase):
             'play_period_end': time(12),
             'voice_chat': True
         }
-
+    
     def _create_games(self):
         games = [Game(name=f'Game {i}') for i in range(0, 10)]
         return Game.objects.bulk_create(games)
@@ -45,7 +45,13 @@ class GameViewSetTestCase(APITestCase):
         r = self.client.get(self.url)
         self.assertEqual(r.status_code, status.HTTP_200_OK)
         self.assertEqual(len(r.data), 10)
+    
+    def test_get_should_make_only_one_conn(self):
+        with self.assertNumQueries(1):
+            r = self.client.get(self.url)
+        self.assertEqual(r.status_code, status.HTTP_200_OK)
 
+        print()
     def test_get_detail_should_return_a_game(self):
         r = self.client.get(self.url_detail)
         expected_data = {
