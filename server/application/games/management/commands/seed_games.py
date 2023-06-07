@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.core.files.uploadedfile import SimpleUploadedFile
 from games.models import *
 from application.settings import BASE_DIR
+from itertools import product
 
 
 WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -17,6 +18,8 @@ class Command(BaseCommand):
         self.clear_games_models()
         self.stdout.write('Creating games...')
         self.create_games()
+        self.stdout.write('Creating weekdays...')
+        self.create_weekdays()
         self.stdout.write('Adding announcements...')
         self.create_announcements()
         self.stdout.write('Done')
@@ -57,27 +60,24 @@ class Command(BaseCommand):
         Weekday.objects.bulk_create(weekdays)
 
     def create_announcements(self):
-        users = [user for user in User.objects.iterator()]
-        games = [game for game in Game.objects.iterator()]
-        self.create_weekdays()
-        
         ann_list = list()
-        for user in users:
-            for game in games:
-                start, end = (random.randint(0, 12), random.randint(0, 11))
-                ann_list.append(Announcement(
-                    game=game,
-                    user=user,
-                    nickname=f'{user.username}{start}{end}',
-                    play_since=random.randint(0, 10),
-                    play_period_start=time(start),
-                    play_period_end=time(start+end),
-                    voice_chat=random.choice([True, False])
-                ))
+        products = product(User.objects.all()[:10], Game.objects.all()[:5])
+        for user, game in products:
+            start, end = (random.randint(0, 12), random.randint(0, 11))
+            ann_list.append(Announcement(
+                game=game,
+                user=user,
+                nickname=f'{user.username}{start}{end}',
+                play_since=random.randint(0, 10),
+                play_period_start=time(start),
+                play_period_end=time(start+end),
+                voice_chat=random.choice([True, False])
+            ))
         Announcement.objects.bulk_create(ann_list)
-
-        for ann in Announcement.objects.iterator():
-            for i in range(4): # 3 days for each ann
-                weekday = Weekday.objects.get(name=random.choice(WEEKDAYS))
-                ann.play_weekdays.add(weekday)
+        
+        # Add 4 days to each ann
+        ann_products = product(Announcement.objects.iterator(), range(4)) 
+        for ann, _ in ann_products:
+            weekday = Weekday.objects.get(name=random.choice(WEEKDAYS))
+            ann.play_weekdays.add(weekday)
 
