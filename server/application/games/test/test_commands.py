@@ -26,7 +26,7 @@ class SeedGamesTestCase(TestCase):
         call_command("seed_games", stdout=self.out)
         self.assertDictEqual(
             self.get_game_models_count(),
-            {'user':30, 'game':10, 'weekday': 7, 'ann': 300}
+            {'user':30, 'game':10, 'weekday': 7, 'ann': 50}
         )
 
     def test_command_should_allways_return_the_same_amount_of_data(self):
@@ -34,6 +34,6 @@ class SeedGamesTestCase(TestCase):
         call_command("seed_games", stdout=self.out)
         self.assertDictEqual(
             self.get_game_models_count(),
-            {'user':30, 'game':10, 'weekday': 7, 'ann': 300}
+            {'user':30, 'game':10, 'weekday': 7, 'ann': 50}
         )
 
