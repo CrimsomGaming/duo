@@ -1,11 +1,12 @@
 import { z } from 'zod';
-
+import Cookies from 'js-cookie'
 import {Gamepad2} from 'lucide-react'
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { useForm,   Controller} from 'react-hook-form';
 
+import { Button } from './Button';
 import { TextInput } from './Form/Input';
 import { Checkbox } from './Form/Checkbox';
 import { WeekDaysSelector } from './WeekDaysSelector';
@@ -13,6 +14,7 @@ import { WeekDaysSelector } from './WeekDaysSelector';
 import { api } from '@/libs/api';
 import { GAME_DTO } from '@/DTO/GAME_DTO';
 import { weekdaysFormated } from '@/utils/weekDays';
+
 
 const newGameAdFormSchema = z.object({
     nickname: z.string({ required_error: 'Preecha o seu nickName.' }).min(2, 'O nickname deve conter pelo menos 2 caracteres.'),
@@ -32,9 +34,15 @@ const newGameAdFormSchema = z.object({
     .transform(weekdays => weekdays.map(day => day.value))
 })
 
-type newGameAdFormSchemaData = z.input < typeof newGameAdFormSchema>
+type newGameAdFormSchemaData = z.input <typeof newGameAdFormSchema>
 
-export  function CreateAdModal() {
+interface CreateAdModalProps {
+    onClose: () => void
+}
+
+export function CreateAdModal({ onClose }:CreateAdModalProps) {
+    const token = Cookies.get('token')
+    
     const [games,setGames] = useState<GAME_DTO[]>([])
     async function fetchGames(){
         const response = await api.get('/games/')
@@ -44,6 +52,7 @@ export  function CreateAdModal() {
     const { formState, register, watch, setValue, handleSubmit, control} = useForm<newGameAdFormSchemaData>({
         resolver: zodResolver(newGameAdFormSchema),
         defaultValues: {
+            timePlayed:0,
             weekDays: weekdaysFormated.map(weekday => {
                 return {
                     isChecked: weekday.isChecked,
@@ -54,7 +63,7 @@ export  function CreateAdModal() {
             })
         }
     })
-    
+
     const { errors, isSubmitting} = formState
 
     const weekDays = watch('weekDays')
@@ -79,15 +88,34 @@ export  function CreateAdModal() {
     }
 
   
-    function handleCreateNewAd(formData: newGameAdFormSchemaData){
-        console.log(formData)
+    async function handleCreateNewAd(formData: newGameAdFormSchemaData){
+        try {
+            await api.post('/games/add/', {
+               game_id: formData.gameId,
+               nickname: formData.nickname,
+               play_since: formData.timePlayed,
+               play_weekdays: formData.weekDays,
+               play_period_start: formData.startHour,
+               play_period_end: formData.endHour,
+               voice_chat: formData.enableChatVoice
+           },{
+               headers: {
+                   Authorization: `Bearer ${token}`
+               }
+           })
+            
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            onClose()
+        }
     }
 
     useEffect(() => {fetchGames()},[])
 
-   
     return (
-        <Dialog.Portal>
+        <Dialog.Portal >
             <Dialog.Overlay className='w-screen h-screen bg-black/60 fixed inset-0 ' />
 
             <Dialog.Content
@@ -105,10 +133,7 @@ export  function CreateAdModal() {
                             <label htmlFor="game" className='font-semibold'>Qual o game?</label>
                             <select
                                 {...register('gameId')}
-                                placeholder='Selecione o game que deseja jogar'
-                             
-                          
-                               
+                                placeholder='Selecione o game que deseja jogar'                           
                                 className='py-3 px-4 bg-zinc-900 text-sm placeholder:text-zinc-500 rounded-[4px] appearance-none focus:ring-gray-500 focus:border-gray-500'
                             >
                                 <option disabled value="ddddd">Selecione o game que deseja jogar</option>
@@ -191,7 +216,6 @@ export  function CreateAdModal() {
                                     />
                                 </div>
                             </div>
-
                         </div>
                     </section>
                     <label className='mt-6 flex gap-x-2 text-sm items-center' >
@@ -208,13 +232,16 @@ export  function CreateAdModal() {
                     <footer className='flex justify-end gap-x-4 mt-8'>
                         <Dialog.Close asChild>
                             <button type='button' className='py-4 px-[20px] bg-zinc-500 font-semibold  rounded-md'>Cancelar</button>
-                        </Dialog.Close>
-                        <button type='submit' className='py-3 px-[20px] bg-violet-500 font-semibold flex gap-x-3 rounded-md'>
-                            <Gamepad2 size={24} />
-                            Encontrar duo
-                        </button>
+                        </Dialog.Close>                       
+                            <Button 
+                                disabled={isSubmitting}
+                                type='submit' 
+                                className='w-max'
+                            >
+                                <Gamepad2 size={24} />
+                                Encontrar duo
+                            </Button>
                     </footer>
-
                 </form>
             </Dialog.Content>
         </Dialog.Portal>
