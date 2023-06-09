@@ -10,7 +10,7 @@ import { GAME_DTO } from '@/DTO/GAME_DTO'
 export const revalidate = 60 * 2 // 2 minutes
 
 export default async function Home() {
-    const response = await api.get<GAME_DTO[]>('/games/')
+    const response = await api.get<GAME_DTO[]>('/games')
     const games = response.data
 
     return (

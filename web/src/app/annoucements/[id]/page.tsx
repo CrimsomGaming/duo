@@ -1,9 +1,9 @@
 import { Heading } from "@/components/Heading"
 import { Text } from "@/components/Text"
 import Image from "next/image"
-import { Card } from "../components/Card"
-import { useKeenSlider } from "keen-slider/react"
+import { api } from "@/libs/api";
 import { AnnoucementsCarrousel } from "../components/AnnoucementsCarrouesel"
+import { ANNOUCEMENT_DTO } from "@/DTO/ANNOUCEMENTS_DTO"
 
 interface AnnoucementsProps {
     params: {
@@ -12,12 +12,29 @@ interface AnnoucementsProps {
 }
 
 
+interface  gameResponse  {
+    game: {
+        id: 1,
+        name: string,
+        image: string
+        ads_count: number,
+        banner: string
+    },
+    announcements: ANNOUCEMENT_DTO[]
+}
+
+
 export default async function Annoucements({ params:{id}}: AnnoucementsProps){
+    const response = await api.get<gameResponse>(`/games/${id}`)
+
+    const { game, announcements } = response.data
+    
+   
 
     return (
         <div className="max-w-[1440px] px-4 py-4 mx-auto gap-6  min-h-screen flex flex-col justify-center ">
             <Image
-                src='http://localhost:3000/Lol-backgroud.jpg'
+                src={game.banner}
                 alt=""
                 width={1344}
                 loading="lazy"
@@ -26,11 +43,11 @@ export default async function Annoucements({ params:{id}}: AnnoucementsProps){
                 
             />
             <div className="text-center">
-                <Heading size="3.5xl">League of Legends</Heading>
+                <Heading size="3.5xl">{game.name}</Heading>
                 <Text type="secondary">Está na hora de encontrar o seu duo vitor</Text>
             </div>
 
-           <AnnoucementsCarrousel/>
+            <AnnoucementsCarrousel annoucements={announcements}/>
 
         </div>
     )

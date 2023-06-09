@@ -45,7 +45,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
     
     const [games,setGames] = useState<GAME_DTO[]>([])
     async function fetchGames(){
-        const response = await api.get('/games/')
+        const response = await api.get('/games')
         setGames(response.data)
     }
 
@@ -90,7 +90,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
   
     async function handleCreateNewAd(formData: newGameAdFormSchemaData){
         try {
-            await api.post('/games/add/', {
+            await api.post('/games/add', {
                game_id: formData.gameId,
                nickname: formData.nickname,
                play_since: formData.timePlayed,

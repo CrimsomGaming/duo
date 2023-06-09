@@ -3,30 +3,38 @@ import 'keen-slider/keen-slider.min.css'
 
 import { useKeenSlider } from "keen-slider/react"
 import { Card } from './Card'
+import { ANNOUCEMENT_DTO } from '@/DTO/ANNOUCEMENTS_DTO'
 
-export function AnnoucementsCarrousel(){
+
+interface AnnoucementsCarrousel {
+    annoucements: ANNOUCEMENT_DTO[],
+}
+
+
+
+export function AnnoucementsCarrousel({ annoucements}: AnnoucementsCarrousel){
     const [sliderRef, instanceRef] = useKeenSlider({
         loop: true,
         slides: {
-            perView: 3.1,
+            perView: 3.2,
             spacing: 24
         }
     })
     return (
         <div ref={sliderRef} className='keen-slider max-w-[831px] mx-auto'>
            {
-            [0,2,2,2].map((slider,index) => (
+            annoucements.map(annoucement=> (
                 <Card
-                    key={index}
+                    key={annoucement.id}
                     avaliable={{
-                        endTime: '8:00',
-                        startTime: '9:00',
-                        weekDays: ['tue', 'mon']
+                        endTime: annoucement.play_period_end,
+                        startTime: annoucement.play_period_start,
+                        weekDays: annoucement.play_weekdays
                     }}
-                    nickName="joison"
-                    timePlayed={2}
-                    useChatVoice={true}
-                    user="favio02"
+                    nickName={annoucement.nickname}
+                    timePlayed={annoucement.play_since}
+                    useChatVoice={annoucement.voice_chat}
+                    user={annoucement.user}
                 />
 
             ))

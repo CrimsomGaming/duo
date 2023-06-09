@@ -3,6 +3,9 @@ import { Text } from "@/components/Text";
 import { weekdaysFormated } from "@/utils/weekDays";
 import { Gamepad2 } from 'lucide-react'
 
+import * as PopoverRadix from '@radix-ui/react-popover';
+import { Popover } from "./Popover";
+import { useState } from "react";
 
 export interface CardProps {
     user: string;
@@ -17,19 +20,28 @@ export interface CardProps {
 }
 
 
-export function Card({ user, avaliable, timePlayed, useChatVoice }: CardProps){
+export function Card({ user, avaliable, timePlayed, useChatVoice,nickName }: CardProps){
+    const [pophoverIsVisible, setPopoverIsVisible] = useState(false)
+    const [nameWithoutDiscriminator] = user.split('#')
+    const startTimeFormated = avaliable.startTime.replace(/:\d{2}$/, "")
+    const endtimeFormated = avaliable.endTime.replace(/:\d{2}$/, "")
+
     const weedays = avaliable.weekDays.map(day => {
         const weekDay = weekdaysFormated.find(dayFormated => dayFormated.value.toUpperCase() === day.toLocaleUpperCase())
        
         if (weekDay ) return weekDay.label.toLowerCase().slice(0,3)
     })
+
+    function closePopover(){
+        setPopoverIsVisible(false)
+    }
     return (
         <div className="keen-slider__slide bg-[#2A2634] rounded-lg flex w-full flex-col gap-4 py-5 px-7" >
             <div>
                 <Text className="block" type="secondary">Nome</Text>
                 <Text className="font-bold" asChild>
                     <strong>
-                        {user}
+                        {nameWithoutDiscriminator}
                     </strong>
                 </Text>
             </div>
@@ -42,21 +54,41 @@ export function Card({ user, avaliable, timePlayed, useChatVoice }: CardProps){
                 <Text className="font-bold" >
                     {weedays.map(day => ` ${day},`)}
                     <span className="block">
-                        {avaliable.startTime} {avaliable.endTime}
+                        {startTimeFormated} - {endtimeFormated}
                     </span>
                 </Text>
             </div>
             <div>
                 <Text className="block" type="secondary" >Chamada de áudio?</Text>
-                <Text  className={`${useChatVoice ? 'text-green-600' : 'text-red-600'} font-bold`}>
-                    {useChatVoice ? 'Sim' : 'Não'}
-                </Text>
-            </div>
+                <span className={` font-bold ${useChatVoice ? 'text-green-500' : 'text-red-500'}`}>
+                        {useChatVoice ? 'Sim' : 'Não'}
 
-            <Button>
-                <Gamepad2 size={24} />
-                Conectar
-            </Button>
+                    </span>
+           
+            </div>
+            <PopoverRadix.Root 
+                open={pophoverIsVisible} 
+                onOpenChange={event => setPopoverIsVisible(event)}
+            >
+                <div className="flex">
+                    <PopoverRadix.Trigger asChild>
+                        <button
+                            className="w-full rounded-md gap-3 px-4 py-3 flex justify-center items-center bg-violet-500  hover:bg-violet-600 hover:text-white font-medium disabled:bg-violet-800 disabled:cursor-not-allowed"
+                            aria-label="Update dimensions"
+                        >
+                            <Gamepad2/> Conectar
+                        </button>
+                    </PopoverRadix.Trigger>
+                    <PopoverRadix.Anchor className="relative bottom-[150px] left-8" />
+
+                </div>
+                <Popover 
+                
+                    dicord={user}
+                    onClosePopover={closePopover}
+                    nickname={nickName}
+                />
+            </PopoverRadix.Root>
         </div>
     )
 }
