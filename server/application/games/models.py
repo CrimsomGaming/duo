@@ -1,5 +1,6 @@
 from django.db import models
 from discordauth.models import User
+from games.managers import AnnouncementManager
 
 
 class Weekday(models.Model):
@@ -27,6 +28,7 @@ class Announcement(models.Model):
     play_period_start = models.TimeField()
     play_period_end = models.TimeField()
     voice_chat = models.BooleanField(default=False)
+    objects = AnnouncementManager()
 
     def __str__(self):
         return f'{self.game} - ({self.user.gamer_tag})'

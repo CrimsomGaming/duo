@@ -68,3 +68,21 @@ class NewAnnounceSerializer(serializers.Serializer):
         for weekday in weekdays:
             ann.play_weekdays.add(weekday)
 
+
+class AnnouncementListSerializer(serializers.ModelSerializer):
+    play_weekdays = serializers.StringRelatedField(many=True)
+    user = serializers.StringRelatedField()
+
+    class Meta:
+        model = Announcement    
+        fields = [
+            'id',
+            'user',
+            'nickname', 
+            'play_since', 
+            'play_weekdays',
+            'play_period_start',
+            'play_period_end',
+            'voice_chat',
+        ]
+
