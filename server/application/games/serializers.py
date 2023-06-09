@@ -12,6 +12,7 @@ class GameSerializer(serializers.ModelSerializer):
 
 
 class NewAnnounceSerializer(serializers.Serializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     game_id = serializers.IntegerField()
     nickname = serializers.CharField()
     play_since = serializers.IntegerField(min_value=0)
@@ -51,20 +52,14 @@ class NewAnnounceSerializer(serializers.Serializer):
                 for day_name in weekdays]
 
     def save(self):
-        data = self.validated_data
-        game = Game.objects.get(id=data.get('game_id'))
-        weekdays = self.get_or_create_weekdays(data.get('play_weekdays'))
-
-        ann = Announcement.objects.create(
-            user=self.context['request'].user,
-            nickname=data.get('nickname'),
-            game=game,
-            play_since=data.get('play_since'),
-            play_period_start=data.get('play_period_start'),
-            play_period_end=data.get('play_period_end'),
-            voice_chat=data.get('voice_chat')
-        )
+        data = dict(self.validated_data)
+        weekdays = self.get_or_create_weekdays(data.pop('play_weekdays'))
+        ann = Announcement.objects.create_or_update(**data)
         
+        for weekday in Weekday.objects.iterator():
+            try: ann.play_weekdays.remove(weekday)
+            except: continue
+
         for weekday in weekdays:
             ann.play_weekdays.add(weekday)
 

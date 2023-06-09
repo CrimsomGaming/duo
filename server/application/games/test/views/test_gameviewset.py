@@ -122,6 +122,33 @@ class GameViewSetTestCase(APITestCase):
             r.data['non_field_errors'][0], 
             'O horário final é maior que o inicial.'
         )
+    
+    def test_add_edit_annoucement(self):
+        # Before any request
+        self.client.force_authenticate(user=self.user)
+        self.assertEqual(self.user.announcements.count(), 0)
+        
+        # After create request
+        r = self.client.post(self.url_add, data=self.ann_data)
+        self.assertEqual(r.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.user.announcements.count(), 1)
+
+        ann = Announcement.objects.get(game_id=1, user=self.user)
+        self.assertEqual(ann.game_id, 1)
+        self.assertEqual(ann.play_since, 1)
+        
+        # After update request
+        self.ann_data['play_since'] = 42
+        self.ann_data['play_weekdays'] = ['sat']
+        r = self.client.post(self.url_add, data=self.ann_data)
+        self.assertEqual(r.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.user.announcements.count(), 1)
+        
+        ann_edited = Announcement.objects.get(game_id=1, user=self.user)
+        self.assertEqual(ann_edited.game_id, 1)
+        self.assertEqual(ann_edited.play_since, 42)
+        self.assertEqual(ann_edited.play_weekdays.count(), 1)
+
 
     def test_get_detail_should_return_anns_with_more_days_and_hours_first(self):
         self._create_annoucements()
