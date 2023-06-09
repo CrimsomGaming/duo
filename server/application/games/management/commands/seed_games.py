@@ -1,10 +1,10 @@
 import os, random
 from datetime import time
+from itertools import product
 from django.core.management.base import BaseCommand
 from django.core.files.uploadedfile import SimpleUploadedFile
 from games.models import *
 from application.settings import BASE_DIR
-from itertools import product
 
 
 WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -31,28 +31,32 @@ class Command(BaseCommand):
         for weekday in Weekday.objects.iterator():
             weekday.delete()
 
+    def get_game_image_and_banner(self, imgs_f_data):
+        return [
+            SimpleUploadedFile(
+                name=file_name,
+                content_type=file_name.split('.')[-1],
+                content=open(GAME_BANNERS_DIR+file_name, 'rb').read()
+            ) for file_name in imgs_f_data
+        ]
+
     def create_games(self):
         game_data_list = [
-            ['League Of Legends', 'lol.jpg'],
-            ['Valorant', 'vava.jpg'], 
-            ['Counter-Strike: Global Offensive', 'csgo.jpg'],
-            ['Fortnite', 'ft.png'],
-            ['Minecraft: Java Edition', 'minejar.png'],
-            ['Minecraft: Bedrock Edition', 'minebed.png'],
-            ['Call of Duty: Warzone', 'codwar.jpeg'],
-            ['Call of Duty: Mobile', 'codmob.jpg'],
-            ['Fifa', 'fifa.jpg'],
-            ['Dota 2', 'd2.jpg'],
+            ['League Of Legends', 'lol.jpg', 'lol_banner.png'],
+            ['Valorant', 'vava.jpg', 'vava_banner.jpg'], 
+            ['Counter-Strike: Global Offensive', 'csgo.jpg', 'csgo_banner.jpg'],
+            ['Fortnite', 'ft.png', 'ft_banner.jpeg'],
+            ['Minecraft: Java Edition', 'minejar.png', 'mine_banner.jpg'],
+            ['Minecraft: Bedrock Edition', 'minebed.png', 'mine_banner.jpg'],
+            ['Call of Duty: Warzone', 'codwar.jpeg', 'codwar_banner.jpg'],
+            ['Call of Duty: Mobile', 'codmob.jpg', 'codmob_banner.png'],
+            ['Fifa', 'fifa.jpg', 'fifa_banner.jpeg'],
+            ['Dota 2', 'd2.jpg', 'd2_banner.png']
         ]
         games = list()
-        for name, img_f_name in game_data_list:
-            img_kwargs = {
-                'name': img_f_name,
-                'content_type': img_f_name.split('.')[-1],
-                'content': open(GAME_BANNERS_DIR+img_f_name, 'rb').read()
-            }
-            image = SimpleUploadedFile(**img_kwargs)
-            games.append(Game(name=name, image=image))
+        for name, *imgs_f_data in game_data_list:
+            image, banner = self.get_game_image_and_banner(imgs_f_data)
+            games.append(Game(name=name, image=image, banner=banner))
         Game.objects.bulk_create(games)
 
     def create_weekdays(self):

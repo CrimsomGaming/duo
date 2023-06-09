@@ -13,6 +13,7 @@ class Weekday(models.Model):
 class Game(models.Model):
     name = models.CharField(max_length=128)
     image = models.ImageField(upload_to='games/', blank=True, null=True)
+    banner = models.ImageField(upload_to='games/', blank=True, null=True)
     image_asset = models.URLField(blank=True, null=True)
 
     def __str__(self):

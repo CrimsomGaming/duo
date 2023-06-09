@@ -8,7 +8,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ['id', 'name', 'image', 'ads_count']
+        fields = ['id', 'name', 'image', 'ads_count', 'banner']
 
 
 class NewAnnounceSerializer(serializers.Serializer):
