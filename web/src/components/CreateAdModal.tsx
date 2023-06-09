@@ -145,7 +145,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
 
                             </select>
                             {errors.gameId && errors.gameId.message && (
-                                <span className='text-sm mt-1 bg-red-500'>{errors.gameId.message}</span>
+                                <span className='text-sm mt-1 text-red-600'>{errors.gameId.message}</span>
                             )}
                         </div>
 
