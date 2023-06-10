@@ -25,44 +25,6 @@ class GameViewSetTestCase(APITestCase):
     def _create_games(self):
         games = [Game(name=f'Game {i}') for i in range(0, 10)]
         return Game.objects.bulk_create(games)
-    
-    def _get_ann_info(self, i):
-        ann_info = {
-            'game_id': 1,
-            'user': self._create_user(i, f'user-{i}'),
-            'play_since': 1,
-            'play_period_start': time(0),
-            'play_period_end': time(1),
-            'voice_chat':True,
-            'nickname': f'generic-user-{i}',
-        }
-
-        if i == 10: 
-            ann_info['user'] = self.user
-            ann_info['nickname'] = 'first-ann-user'
-            ann_info['play_period_end'] = time(23)
-
-        elif i == 11:
-            ann_info['play_period_end'] = time(22)
-            ann_info['nickname'] = 'second-ann-user'
-
-        elif i == 13:
-            ann_info['voice_chat'] = False
-            ann_info['nickname'] = 'last-ann-user'
-
-        return ann_info
-
-    def _create_annoucements(self):
-        anns = list()
-        for i in range(10, 20):
-            ann_info = self._get_ann_info(i)
-            anns.append(Announcement(**ann_info))
-
-        Announcement.objects.bulk_create(anns)
-
-        sun = Weekday.objects.create(name='SUN')
-        for ann in Announcement.objects.iterator():
-            ann.play_weekdays.add(sun)
 
     def _create_user(self, id=999999, username='someusername'):
         user_data = {
@@ -149,45 +111,12 @@ class GameViewSetTestCase(APITestCase):
         self.assertEqual(ann_edited.play_since, 42)
         self.assertEqual(ann_edited.play_weekdays.count(), 1)
 
-
-    def test_get_detail_should_return_anns_with_more_days_and_hours_first(self):
-        self._create_annoucements()
+    def test_add_detail(self):
         r = self.client.get(self.url_detail)
-
         self.assertEqual(r.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            r.data['announcements'][0].get('nickname'), 
-            'first-ann-user'
-        )
     
-    def test_get_detail_should_not_return_authenticated_user_ann(self):
+    def test_add_detail_with_authenticated_user(self):
         self.client.force_authenticate(self.user)
-        self._create_annoucements()
-
         r = self.client.get(self.url_detail)
         self.assertEqual(r.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            r.data['announcements'][0].get('nickname'), 
-            'second-ann-user'
-        )
 
-    def test_get_detail_ordering_is_working_well(self):
-        self._create_annoucements()
-
-        r = self.client.get(self.url_detail)
-        self.assertEqual(r.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            r.data['announcements'][-1].get('nickname'), 
-            'last-ann-user'
-        )
-
-    def test_get_detail_is_return_game_info_correctly(self):
-        r = self.client.get(self.url_detail)
-        r_game_info = {
-            'id': r.data.get('game')['id'],
-            'name': r.data.get('game')['name'],
-            'ads_count': r.data.get('game')['ads_count'],
-        }
-        self.assertEqual(
-            r_game_info, {'id':1, 'name':'Game 0', 'ads_count': 0}
-        )

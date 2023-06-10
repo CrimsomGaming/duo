@@ -25,8 +25,9 @@ class GameViewSet(ReadOnlyModelViewSet):
         return self.get_serializer(game)
     
     def get_serialized_annoucements(self):
-        ann_info = (self.kwargs.get('pk'), self.request.user)
-        anns = Announcement.objects.get_ordered_announcements(*ann_info)
+        game = Game.objects.get(id=self.kwargs.get('pk'))
+        ann_info = (game, self.request.user)
+        anns = Announcement.objects.order_by_score(*ann_info)
         serializer = AnnouncementListSerializer(data=anns, many=True)
         serializer.is_valid()
         return serializer

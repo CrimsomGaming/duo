@@ -1,6 +1,6 @@
 from django.db import models
 from discordauth.models import User
-from games.managers import AnnouncementManager
+from games.managers.announcement import AnnouncementManager
 
 
 class Weekday(models.Model):
