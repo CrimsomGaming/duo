@@ -29,18 +29,24 @@ interface  gameResponse  {
 export default async function Annoucements({ params:{id}}: AnnoucementsProps){
     const user = getUser()
     const userIsLoged = !!user
-   
-    
-    const response = await api.get<gameResponse>(`/games/${id}`,{
-        headers: {
-           Authorization: `Bearer ${user?.sub}`
+
+    async function fetchAnnoucements() {
+        if (!userIsLoged) {
+            const response = await api.get<gameResponse>(`/games/${id}`)
+            return response.data
         }
-    })
-   
 
-    
+        const response = await api.get<gameResponse>(`/games/${id}`, {
+            headers: {
+                Authorization: `Bearer ${user?.sub}`
+            }
+        })
 
-    const { game, announcements } = response.data
+        return response.data
+
+    }
+
+    const { game, announcements } = await fetchAnnoucements()
     
    
 

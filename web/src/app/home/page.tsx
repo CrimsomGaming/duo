@@ -12,13 +12,26 @@ export const revalidate = 60 * 2 // 2 minutes
 
 export default async function Home() {
     const user = getUser()
-    const response = await api.get<GAME_DTO[]>('/games',{
-        headers : {
-            Authorization: `Bearer ${user?.sub} `
-        }
-    })
-    const games = response.data
+    const userIsLoged = !!user
+    
 
+    async function fetchGames(){
+        if (!userIsLoged){
+            const response = await api.get<GAME_DTO[]>('/games',)
+            return  response.data
+        }
+        
+        const response = await api.get<GAME_DTO[]>('/games', {
+            headers: {
+                Authorization: `Bearer ${user?.sub} `
+            }
+        })
+
+        return response.data
+        
+    }
+
+    const games = await fetchGames()
 
     return (
         <div className="max-w-[1424px] px-10 mx-auto flex flex-col items-center  min-h-screen justify-center max-sm:px-0">
