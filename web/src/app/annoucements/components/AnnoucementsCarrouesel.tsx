@@ -8,11 +8,12 @@ import { ANNOUCEMENT_DTO } from '@/DTO/ANNOUCEMENTS_DTO'
 
 interface AnnoucementsCarrousel {
     annoucements: ANNOUCEMENT_DTO[],
+    userIsLogged: boolean,
 }
 
 
 
-export function AnnoucementsCarrousel({ annoucements}: AnnoucementsCarrousel){
+export function AnnoucementsCarrousel({ annoucements,userIsLogged}: AnnoucementsCarrousel){
     const [sliderRef, instanceRef] = useKeenSlider({
         loop: true,
         slides: {
@@ -25,6 +26,7 @@ export function AnnoucementsCarrousel({ annoucements}: AnnoucementsCarrousel){
            {
             annoucements.map(annoucement=> (
                 <Card
+                    userIsLogged={userIsLogged}
                     key={annoucement.id}
                     avaliable={{
                         endTime: annoucement.play_period_end,

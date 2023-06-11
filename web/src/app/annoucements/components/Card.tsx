@@ -1,13 +1,17 @@
-import { Button } from "@/components/Button";
-import { Text } from "@/components/Text";
-import { weekdaysFormated } from "@/utils/weekDays";
-import { Gamepad2 } from 'lucide-react'
-
-import * as PopoverRadix from '@radix-ui/react-popover';
-import { Popover } from "./Popover";
 import { useState } from "react";
+import { Gamepad2 } from 'lucide-react'
+import * as Dialog from '@radix-ui/react-dialog';
+import * as PopoverRadix from '@radix-ui/react-popover';
+
+import { Text } from "@/components/Text";
+import { Button } from "@/components/Button";
+import { weekdaysFormated } from "@/utils/weekDays";
+import { UnauthorizedModal } from "@/components/UnauthorizedModal";
+
+import { Popover } from "./Popover";
 
 export interface CardProps {
+    userIsLogged: boolean,
     user: string;
     nickName: string;
     timePlayed: number;
@@ -20,7 +24,7 @@ export interface CardProps {
 }
 
 
-export function Card({ user, avaliable, timePlayed, useChatVoice,nickName }: CardProps){
+export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userIsLogged }: CardProps){
     const [pophoverIsVisible, setPopoverIsVisible] = useState(false)
     const [nameWithoutDiscriminator] = user.split('#')
     const startTimeFormated = avaliable.startTime.replace(/:\d{2}$/, "")
@@ -66,29 +70,46 @@ export function Card({ user, avaliable, timePlayed, useChatVoice,nickName }: Car
                     </span>
            
             </div>
-            <PopoverRadix.Root 
-                open={pophoverIsVisible} 
-                onOpenChange={event => setPopoverIsVisible(event)}
-            >
-                <div className="flex">
-                    <PopoverRadix.Trigger asChild>
-                        <button
-                            className="w-full rounded-md gap-3 px-4 py-3 flex justify-center items-center bg-violet-500  hover:bg-violet-600 hover:text-white font-medium disabled:bg-violet-800 disabled:cursor-not-allowed"
-                            aria-label="Update dimensions"
-                        >
-                            <Gamepad2/> Conectar
-                        </button>
-                    </PopoverRadix.Trigger>
-                    <PopoverRadix.Anchor className="relative bottom-[150px] left-8" />
+            {
+                userIsLogged ?  (
+                    <PopoverRadix.Root 
+                        open={pophoverIsVisible} 
+                        onOpenChange={event => setPopoverIsVisible(event)}
+                    >
+                        <div className="flex">
+                            <PopoverRadix.Trigger asChild>
+                                <button
+                                    className="w-full rounded-md gap-3 px-4 py-3 flex justify-center items-center bg-violet-500  hover:bg-violet-600 hover:text-white font-medium disabled:bg-violet-800 disabled:cursor-not-allowed"
+                                    aria-label="Update dimensions"
+                                >
+                                    <Gamepad2/> Conectar
+                                </button>
+                            </PopoverRadix.Trigger>
+                            <PopoverRadix.Anchor className="relative bottom-[150px] left-8" />
 
-                </div>
-                <Popover 
-                
-                    dicord={user}
-                    onClosePopover={closePopover}
-                    nickname={nickName}
-                />
-            </PopoverRadix.Root>
+                        </div>
+                        <Popover 
+                        
+                            dicord={user}
+                            onClosePopover={closePopover}
+                            nickname={nickName}
+                        />
+                    </PopoverRadix.Root>
+
+
+                ) : (
+                    <Dialog.Root>
+                            <Dialog.Trigger asChild>
+                                <Button>Conectar</Button>
+                            </Dialog.Trigger>
+                            <UnauthorizedModal
+                                title="Crie um usuário"
+                                content={`Você precisa estar logado para ver o Discord e nickname de ${nameWithoutDiscriminator}`}
+                            />
+                    </Dialog.Root>
+                )
+            }
+
         </div>
     )
 }

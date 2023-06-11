@@ -4,8 +4,9 @@ import Image from "next/image"
 import { api } from "@/libs/api";
 import { AnnoucementsCarrousel } from "../components/AnnoucementsCarrouesel"
 import { ANNOUCEMENT_DTO } from "@/DTO/ANNOUCEMENTS_DTO"
-import { cookies } from "next/headers";
 import { getUser } from "@/libs/auth";
+import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 
 interface AnnoucementsProps {
     params: {
@@ -30,11 +31,14 @@ export default async function Annoucements({ params:{id}}: AnnoucementsProps){
     const user = getUser()
     const userIsLoged = !!user
 
+    
+    
     async function fetchAnnoucements() {
         if (!userIsLoged) {
             const response = await api.get<gameResponse>(`/games/${id}`)
             return response.data
         }
+       
 
         const response = await api.get<gameResponse>(`/games/${id}`, {
             headers: {
@@ -66,7 +70,7 @@ export default async function Annoucements({ params:{id}}: AnnoucementsProps){
                 <Text type="secondary">Está na hora de encontrar o seu duo {user?.username}</Text>
             </div>
 
-            <AnnoucementsCarrousel annoucements={announcements}/>
+            <AnnoucementsCarrousel userIsLogged={userIsLoged} annoucements={announcements}/>
 
         </div>
     )

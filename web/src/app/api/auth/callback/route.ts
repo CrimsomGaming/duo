@@ -1,6 +1,7 @@
 import { api } from "@/libs/api";
 import axios from "axios";
 import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 interface AuthResponseProps {
@@ -11,9 +12,11 @@ interface AuthResponseProps {
 export async function GET(request: NextRequest ){
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
+    const redirectTo = cookies().get('redirectTo')?.value
+   
 
 
-    const redirectURL = new URL('/home', request.url)
+    const redirectURL = redirectTo  || new URL('/home', request.url)
 
     const authResponse = await api.post<AuthResponseProps>('/auth/login',{
         code: code,
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest ){
     const {access,refresh} = authResponse.data
 
    
-
+    
     const cookieExpiration = 60 * 60 * 24 * 30 // 30 days
 
     return NextResponse.redirect(redirectURL, {

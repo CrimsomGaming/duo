@@ -1,8 +1,11 @@
 'use client'
-import Image from "next/image";
-import { Text } from "./Text";
-import { GAME_DTO } from "@/DTO/GAME_DTO";
+
 import Link from "next/link";
+import Image from "next/image";
+
+
+import { Text } from "@/components/Text";
+import { GAME_DTO } from "@/DTO/GAME_DTO";
 
 
 export function GameBanner(props: GAME_DTO) {

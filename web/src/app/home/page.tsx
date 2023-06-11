@@ -1,8 +1,8 @@
 import 'keen-slider/keen-slider.min.css'
 
 import { Heading } from '@/components/Heading'
-import { GamesCarousell } from '@/components/GamesCarrousel'
-import { CreateAdBanner } from '@/components/CreateAdBanner'
+import { GamesCarousell } from '@/app/home/components/GamesCarrousel'
+import { CreateAdBanner } from '@/app/home/components/CreateAdBanner'
 
 import { api } from '@/libs/api'
 import { GAME_DTO } from '@/DTO/GAME_DTO'

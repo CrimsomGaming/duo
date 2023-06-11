@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot'
 
 import { ReactNode } from 'react';
 export interface TextProps {
-    size?: 'xs' | 'sm' | 'base'|  'base'
+    size?: 'xs' | 'sm' | 'base' | 'base' | 'lg',
     type?: 'primary' | 'secondary'
     children: ReactNode,
     asChild?: boolean,
@@ -20,6 +20,7 @@ export function Text({ size = 'base', children, asChild,type='primary', classNam
                 {
                     'text-sm': size === 'sm',
                     'text-xs': size === 'xs',
+                    'text-lg': size === 'lg',
                     'text-zinc-400': type === 'secondary'
 
                 },

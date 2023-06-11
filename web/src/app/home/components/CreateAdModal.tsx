@@ -6,10 +6,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { useForm,   Controller} from 'react-hook-form';
 
-import { Button } from './Button';
-import { TextInput } from './Form/Input';
-import { Checkbox } from './Form/Checkbox';
-import { WeekDaysSelector } from './WeekDaysSelector';
+import { Button } from '@/components/Button';
+import { TextInput } from '@/components/Form/Input';
+import { Checkbox } from '@/components/Form/Checkbox';
+import { WeekDaysSelector } from '@/components/WeekDaysSelector';
 
 import { api } from '@/libs/api';
 import { GAME_DTO } from '@/DTO/GAME_DTO';
