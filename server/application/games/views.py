@@ -1,4 +1,3 @@
-from django.db.models import Count, F
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet 
 from rest_framework.decorators import action
@@ -16,10 +15,9 @@ class GameViewSet(ReadOnlyModelViewSet):
     serializer_class = GameSerializer
 
     def get_queryset(self):
-        return Game.objects.annotate(
-            ads_count=Count(F('announcements'))
-        )
-    
+        user = self.request.user
+        return  Game.objects.all_with_ann_count(user).order_by('-ann_count')   
+
     def get_serialized_game(self):
         game = self.get_object()
         return self.get_serializer(game)

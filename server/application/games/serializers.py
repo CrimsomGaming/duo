@@ -4,7 +4,7 @@ from .models import Announcement, Game, Weekday
 
 
 class GameSerializer(serializers.ModelSerializer):
-    ads_count = serializers.IntegerField()
+    ads_count = serializers.IntegerField(source='ann_count')
 
     class Meta:
         model = Game
