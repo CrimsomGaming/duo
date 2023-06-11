@@ -1,3 +1,4 @@
+from datetime import time
 from .ordering.mixins import AnnouncementScoreManagerMixin
 
 
@@ -34,8 +35,10 @@ class AnnouncementManager(AnnouncementScoreManagerMixin):
             ann.play_since = data.get('play_since', ann.play_since)
             ann.play_period_start = data.get('play_period_start', start)
             ann.play_period_end = data.get('play_period_end', end)
-            ann.save(); return ann
-        
+            ann.voice_chat = data.get('voice_chat', ann.voice_chat)
+            ann.save() 
+            return ann
+
         ann = self.create(**data)
         return ann
 
