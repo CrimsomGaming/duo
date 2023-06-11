@@ -4,7 +4,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { ReactNode } from 'react';
 export interface TextProps {
     size?: 'xs' | 'sm' | 'base' | 'base' | 'lg',
-    type?: 'primary' | 'secondary'
+    type?: 'primary' | 'secondary' | 'error'
     children: ReactNode,
     asChild?: boolean,
     className?: string
@@ -16,11 +16,13 @@ export function Text({ size = 'base', children, asChild,type='primary', classNam
     return (
         <Comp className={
             clsx(
-                'text-white text-base',
+                ' text-base',
                 {
                     'text-sm': size === 'sm',
                     'text-xs': size === 'xs',
                     'text-lg': size === 'lg',
+                    'text-white': type === 'primary',
+                    'text-red-500': type === 'error',
                     'text-zinc-400': type === 'secondary'
 
                 },
