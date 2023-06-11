@@ -1,6 +1,7 @@
 from django.db import models
 from discordauth.models import User
 from games.managers.announcement import AnnouncementManager
+from games.managers.games import GameManager
 
 
 class Weekday(models.Model):
@@ -15,6 +16,7 @@ class Game(models.Model):
     image = models.ImageField(upload_to='games/', blank=True, null=True)
     banner = models.ImageField(upload_to='games/', blank=True, null=True)
     image_asset = models.URLField(blank=True, null=True)
+    objects = GameManager()
 
     def __str__(self):
         return self.name
