@@ -53,6 +53,8 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
         resolver: zodResolver(newGameAdFormSchema),
         defaultValues: {
             timePlayed:0,
+            startHour: '08:00',
+            endHour: '16:00',
             weekDays: weekdaysFormated.map(weekday => {
                 return {
                     isChecked: weekday.isChecked,
@@ -90,7 +92,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
   
     async function handleCreateNewAd(formData: newGameAdFormSchemaData){
         try {
-            await api.post('/games/add', {
+            const response = await api.post('/games/add', {
                game_id: formData.gameId,
                nickname: formData.nickname,
                play_since: formData.timePlayed,
@@ -103,7 +105,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                    Authorization: `Bearer ${token}`
                }
            })
-            
+         
         } catch (error) {
             console.log(error)
         }
@@ -197,9 +199,6 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                                     <TextInput.Input
                                         {...register('startHour')}
                                         type="time"
-                                        defaultValue={'08:00'}
-                                        name="hourStart"
-                                        id='hourStart'
                                         placeholder='Até'
                                         className='h-9'
                                         
@@ -208,10 +207,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                                     <TextInput.Input
                                         {...register('endHour')}
                                         type="time"
-                                        name='hourEnd'
-                                        id='hourEnd'
                                         placeholder='De'
-                                        defaultValue={'16:00'}
                                         className='h-9'
                                     />
                                 </div>

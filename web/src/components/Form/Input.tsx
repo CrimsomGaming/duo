@@ -41,7 +41,7 @@ interface TextInputErrorProps {
 
 function TextInputError({ children }: TextInputErrorProps ){
     return (
-        <Text size="sm" className="text-red-600">
+        <Text size="sm" type="error">
             {children}
         </Text>
     )

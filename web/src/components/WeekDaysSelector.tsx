@@ -47,7 +47,7 @@ export function WeekDaysSelector({ updateWeekDay, weekDays, error }: WeekDaysSel
             </ToggleGroup.Root>
             {
                 error && (
-                    <Text size="sm" className="text-[#EF4444] block max-w-[180px]">
+                    <Text size="sm" type="error" className=" block max-w-[180px]">
                         {error}
                     </Text>
                 )
