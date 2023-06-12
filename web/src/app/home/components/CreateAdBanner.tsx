@@ -11,15 +11,21 @@ import { Heading } from '@/components/Heading'
 import { UnauthorizedModal } from '@/components/UnauthorizedModal'
 
 import { CreateAdModal } from './CreateAdModal'
+import { Toast } from '@/components/Toast'
 
 export function CreateAdBanner() {
     const token = Cookies.get('token')
+    const [gameSelect, setGameSelect] = useState('')
+    const [toastVisibility, setToastVisibility] = useState(false)
+    
     const useIsLoged = !!token
     const [AdModalIsVisible, setAdModalIsVisible] = useState(false)
 
 
-    function handleCloseModal(){
+    function handleCloseModal(gameSelected?: string){
         setAdModalIsVisible(false)
+        setToastVisibility(true)
+        setGameSelect(gameSelected as string)
     }
 
     return (
@@ -70,7 +76,17 @@ export function CreateAdBanner() {
                             </Dialog.Root>
                     )
                 }
-          
+              
+
+                <Toast
+                    open={toastVisibility}
+                    onOpenChange={setToastVisibility}
+                    onClick={() => {setAdModalIsVisible(false)}}
+                    title='Anuncio Criado'
+                    description={`Você criou um novo annúncio de ${gameSelect}`}
+                    
+                />
+                
             </div>
         </footer>
     )

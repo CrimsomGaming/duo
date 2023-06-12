@@ -3,24 +3,25 @@ import { Button } from '@/components/Button';
 import { Text } from '@/components/Text';
 import * as PopoverRadix from '@radix-ui/react-popover';
 import {Clipboard} from 'lucide-react'
+import * as Portal from '@radix-ui/react-portal';
 
 interface PopoverProps {
     nickname: string;
     dicord: string;
-    onClosePopover: () => void;
+    onClosePopover: (cliboardContent: string) => void;
 }
 
 export function Popover({ nickname, dicord,onClosePopover }: PopoverProps){
-    async function copyTextToClipboard(text: string){
-        await navigator.clipboard.writeText(text)
-
-        onClosePopover()
+    async function copyTextToClipboard(cliboardContent: string){
+        await navigator.clipboard.writeText(cliboardContent)
+        onClosePopover(cliboardContent)
+        
     }
     return (
         <PopoverRadix.Portal>
             <PopoverRadix.Content
                 side='right'
-                className="  bg-[#3d374c] min-w-[216px]  p-6 rounded-lg flex flex-col gap-4"
+                className={`  bg-[#3d374c] min-w-[216px]  p-6 rounded-lg flex flex-col gap-4`}
                 sideOffset={5}
             >   
                 <div className='flex flex-col gap-1'>
@@ -48,8 +49,11 @@ export function Popover({ nickname, dicord,onClosePopover }: PopoverProps){
                     </Button>
 
                 </div>
+
+              
                 
                 <PopoverRadix.Arrow className="fill-[#3d374c]" />
+
             </PopoverRadix.Content>
         </PopoverRadix.Portal>
     )

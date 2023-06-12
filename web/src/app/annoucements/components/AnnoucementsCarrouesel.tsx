@@ -19,6 +19,23 @@ export function AnnoucementsCarrousel({ annoucements,userIsLogged}: Annoucements
         slides: {
             perView: 3.2,
             spacing: 24
+        },
+        breakpoints : {
+            '(max-width: 767px)': {
+                slides: {
+                    perView: 2.2,
+                    spacing: 16,
+
+                }
+            },
+
+            '(max-width: 480px)': {
+                slides: {
+                    perView: 1.1,
+                    spacing: 16,
+
+                }
+            },
         }
     })
     return (

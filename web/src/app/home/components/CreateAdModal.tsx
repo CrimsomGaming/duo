@@ -37,7 +37,7 @@ const newGameAdFormSchema = z.object({
 type newGameAdFormSchemaData = z.input <typeof newGameAdFormSchema>
 
 interface CreateAdModalProps {
-    onClose: () => void
+    onClose: (gameSelected?: string) => void
 }
 
 export function CreateAdModal({ onClose }:CreateAdModalProps) {
@@ -89,6 +89,11 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
         setValue('weekDays', weekDaysUpdated)
     }
 
+    function handleCloseModal(gameId: number){
+        const gameSelected = games.find(game => game.id === gameId)
+        onClose(gameSelected?.name)
+    }
+
   
     async function handleCreateNewAd(formData: newGameAdFormSchemaData){
         try {
@@ -110,7 +115,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
             console.log(error)
         }
         finally {
-            onClose()
+            handleCloseModal(Number(formData.gameId))
         }
     }
 

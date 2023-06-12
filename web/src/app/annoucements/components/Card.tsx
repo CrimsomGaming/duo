@@ -3,12 +3,17 @@ import { Gamepad2 } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog';
 import * as PopoverRadix from '@radix-ui/react-popover';
 
+
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
 import { weekdaysFormated } from "@/utils/weekDays";
 import { UnauthorizedModal } from "@/components/UnauthorizedModal";
 
+
+
 import { Popover } from "./Popover";
+import { Heading } from "@/components/Heading";
+import { Toast } from "@/components/Toast";
 
 export interface CardProps {
     userIsLogged: boolean,
@@ -26,6 +31,9 @@ export interface CardProps {
 
 export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userIsLogged }: CardProps){
     const [pophoverIsVisible, setPopoverIsVisible] = useState(false)
+    const [toastVisibility, setToastVisibility] = useState(false)
+    const [clipboardContent, setClipboardContent] = useState('')
+
     const [nameWithoutDiscriminator] = user.split('#')
     const startTimeFormated = avaliable.startTime.replace(/:\d{2}$/, "")
     const endtimeFormated = avaliable.endTime.replace(/:\d{2}$/, "")
@@ -36,8 +44,10 @@ export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userI
         if (weekDay ) return weekDay.label.toLowerCase().slice(0,3)
     })
 
-    function closePopover(){
+    function closePopover(cliboardContent: string){
         setPopoverIsVisible(false)
+        setToastVisibility(true)
+        setClipboardContent(cliboardContent)
     }
     return (
         <div className="keen-slider__slide bg-[#2A2634] rounded-lg flex w-full flex-col gap-4 py-5 px-7" >
@@ -109,6 +119,21 @@ export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userI
                     </Dialog.Root>
                 )
             }
+
+            {
+                toastVisibility && (
+
+                        <Toast
+                            open={toastVisibility}
+                            title="Conteúdo copiado"
+                            onClick={() => setToastVisibility(false)}
+                            onOpenChange={setToastVisibility}
+                            description={<>você acabou de copiar <strong>{clipboardContent}</strong> para a sua tranferencia</>}
+                        />
+              
+                )
+            }
+
 
         </div>
     )
