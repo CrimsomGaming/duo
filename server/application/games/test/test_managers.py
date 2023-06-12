@@ -1,4 +1,3 @@
-from django.db.models import Q, F
 from django.contrib.auth.models import AnonymousUser
 from datetime import time
 from games.models import Announcement, Game, User, Weekday
@@ -123,12 +122,12 @@ class OrderingTestCase(AbstractAnnouncementTestCase):
         test_ann.play_weekdays.add(Weekday.objects.get(id=1))
         data = {
             'default_score': 22,
-            'match_score': 30,
+            'match_score': 25,
             'play_period_score': 1,
             'play_since_score': 1,
-            'play_weekdays_score': 1,
+            'play_weekdays_score': 0,
             'voice_chat_score': 3,
-            'total_score': 52
+            'total_score': 47
         }
         ann = self.manager.order_by_score(self.game, user)\
         .values(*data.keys())[0]
