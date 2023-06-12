@@ -69,7 +69,7 @@ export default async function Annoucements({ params:{id}}: AnnoucementsProps){
                 <Heading size="3.5xl">{game.name}</Heading>
                 <Text type="secondary">Está na hora de encontrar o seu duo {user?.username}</Text>
             </div>
-
+            
             <AnnoucementsCarrousel userIsLogged={userIsLoged} annoucements={announcements}/>
 
         </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Gamepad2 } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog';
 import * as PopoverRadix from '@radix-ui/react-popover';
+import * as Portal from '@radix-ui/react-portal';
 
 
 import { Text } from "@/components/Text";
@@ -122,14 +123,18 @@ export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userI
 
             {
                 toastVisibility && (
+                    <Portal.Root>
 
                         <Toast
                             open={toastVisibility}
                             title="Conteúdo copiado"
+                            duration={3000}
                             onClick={() => setToastVisibility(false)}
                             onOpenChange={setToastVisibility}
                             description={<>você acabou de copiar <strong>{clipboardContent}</strong> para a sua tranferencia</>}
                         />
+
+                    </Portal.Root>
               
                 )
             }
