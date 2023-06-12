@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import F, Q, Count, When, Case
-from django.db.models.functions import Cast
+from django.db.models.functions import ExtractHour
 
 
 class AnnouncementDefaultOrderingRules(models.Manager):
@@ -17,11 +17,11 @@ class AnnouncementDefaultOrderingRules(models.Manager):
         }
 
     def _get_total_hours_a_day(self):
-        HOUR = 60 * 60 * 1_000_000
-        rule = (F('play_period_end') - F('play_period_start')) / HOUR
-        output_field = models.IntegerField()
-        return Cast(rule, output_field)
-
+        start, end = (
+            ExtractHour(F('play_period_start')),
+            ExtractHour(F('play_period_end'))
+        )
+        return end - start
 
 class AnnouncementMatchOrderingRules(AnnouncementDefaultOrderingRules):
     def _get_play_simultaneously(self, user_ann):
@@ -43,8 +43,7 @@ class AnnouncementMatchOrderingRules(AnnouncementDefaultOrderingRules):
     def _get_play_at_same_days(self, user_ann):
         WEIGTH = 3
         rule = Q(play_weekdays__in=user_ann.play_weekdays.all())
-        kwargs={'default': 1, 'output_field': models.IntegerField()}
-        return Case(When(rule, then=1*WEIGTH), **kwargs)
+        return Count(F('play_weekdays'), filter=rule) * WEIGTH
 
     def _get_voice_chat_is_equal(self, user_ann):
         WEIGTH = 3
