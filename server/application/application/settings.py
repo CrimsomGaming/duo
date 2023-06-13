@@ -158,9 +158,12 @@ DISCORD_REDIRECT_URI = os.getenv('DISCORD_REDIRECT_URI')
 # Corsheaders
 CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', default='True') == 'True'
 
+DAY = 100 * 60 * 60 * 24 # 24h in secs
+access_lifetime = int(os.getenv('ACCESS_TOKEN_LIFETIME', 7 * DAY))
+refresh_lifetime = int(os.getenv('REFRESH_TOKEN_LIFETIME', 90 * DAY))
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=100),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=100),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=access_lifetime),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=refresh_lifetime),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
