@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet 
-from rest_framework.decorators import action
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Game, Announcement
@@ -39,17 +39,13 @@ class GameViewSet(ReadOnlyModelViewSet):
             'announcements': ann_serializer.data
         })
 
-    @action(
-        detail=False, methods=['POST'], 
-        permission_classes=[IsAuthenticated]
-    )
-    def add(self, request):
-        kwargs = {
-            'data': request.data,
-            'context': self.get_serializer_context()
-        }
-        serializer = NewAnnounceSerializer(**kwargs)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(http_method_names=['POST'])
+@permission_classes([IsAuthenticated])
+def announcement_view(request):
+    context = {'request': request}
+    serializer = NewAnnounceSerializer(data=request.data, context=context)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
