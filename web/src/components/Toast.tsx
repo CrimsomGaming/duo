@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import * as Portal from '@radix-ui/react-portal';
 import * as ToastRadix from '@radix-ui/react-toast';
 
 import { Text } from '@/components/Text';
@@ -12,7 +11,6 @@ interface ToastProps extends ToastRadix.ToastProps {
 
 export function Toast({title,description, ...rest} : ToastProps) {
     return (
-        <Portal.Root>
             <ToastRadix.Provider  label="notificação" swipeDirection="right" >
 
 
@@ -38,6 +36,5 @@ export function Toast({title,description, ...rest} : ToastProps) {
                 </ToastRadix.Root>
                 <ToastRadix.Viewport className="[--viewport-padding:_25px] fixed top-0  right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
             </ToastRadix.Provider>
-        </Portal.Root>
     )
 }

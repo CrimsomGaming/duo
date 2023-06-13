@@ -97,7 +97,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
   
     async function handleCreateNewAd(formData: newGameAdFormSchemaData){
         try {
-            const response = await api.post('/games/add', {
+           await api.post('/games/add', {
                game_id: formData.gameId,
                nickname: formData.nickname,
                play_since: formData.timePlayed,

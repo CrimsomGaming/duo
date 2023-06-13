@@ -77,15 +77,17 @@ export function CreateAdBanner() {
                     )
                 }
               
+                <div className='fixed'>
+                    <Toast
+                        open={toastVisibility}
+                        onOpenChange={setToastVisibility}
+                        onClick={() => {setToastVisibility(false)}}
+                        title='Anuncio Criado'
+                        description={`Você criou um novo annúncio de ${gameSelect}`}
+                        
+                    />
 
-                <Toast
-                    open={toastVisibility}
-                    onOpenChange={setToastVisibility}
-                    onClick={() => {setAdModalIsVisible(false)}}
-                    title='Anuncio Criado'
-                    description={`Você criou um novo annúncio de ${gameSelect}`}
-                    
-                />
+                </div>
                 
             </div>
         </footer>
