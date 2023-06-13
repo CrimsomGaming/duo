@@ -7,8 +7,13 @@ import { CreateAdBanner } from '@/app/home/components/CreateAdBanner'
 import { api } from '@/libs/api'
 import { GAME_DTO } from '@/DTO/GAME_DTO'
 import { getUser } from '@/libs/auth'
+import { Metadata } from 'next'
 
 export const revalidate = 60 * 2 // 2 minutes
+
+export const metadata: Metadata = {
+    title:'Home'
+}
 
 export default async function Home() {
     const user = getUser()
