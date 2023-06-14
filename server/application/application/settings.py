@@ -95,8 +95,12 @@ WSGI_APPLICATION = 'application.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'USER': os.getenv('DB_USER'),
+        'NAME': os.getenv('DB_NAME'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),   
+        'PORT': os.getenv('DB_PORT'), 
     }
 }
 
@@ -157,7 +161,9 @@ DISCORD_REDIRECT_URI = os.getenv('DISCORD_REDIRECT_URI')
 
 # Corsheaders
 CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', default='True') == 'True'
+CORS_ALLOWED_ORIGINS = [os.getenv('CORS_ALLOWED_ORIGINS', 'http://site.com')]
 
+# SimpleJWT
 DAY = 100 * 60 * 60 * 24 # 24h in secs
 access_lifetime = int(os.getenv('ACCESS_TOKEN_LIFETIME', 7 * DAY))
 refresh_lifetime = int(os.getenv('REFRESH_TOKEN_LIFETIME', 90 * DAY))
