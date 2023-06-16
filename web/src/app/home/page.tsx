@@ -8,35 +8,19 @@ import { api } from '@/libs/api'
 import { GAME_DTO } from '@/DTO/GAME_DTO'
 import { getUser } from '@/libs/auth'
 import { Metadata } from 'next'
+import { serverSideApi } from '@/libs/serverSideApi'
 
 export const revalidate = 60 * 2 // 2 minutes
 
 export const metadata: Metadata = {
-    title:'Home'
+    title:'Home',
+    description: 'Crie um novo anúncio ou escolha um game para encontrar um novo pareceiro'
 }
 
 export default async function Home() {
-    const user = getUser()
-    const userIsLoged = !!user
-    
 
-    async function fetchGames(){
-        if (!userIsLoged){
-            const response = await api.get<GAME_DTO[]>('/games',)
-            return  response.data
-        }
-        
-        const response = await api.get<GAME_DTO[]>('/games', {
-            headers: {
-                Authorization: `Bearer ${user?.sub} `
-            }
-        })
-
-        return response.data
-        
-    }
-
-    const games = await fetchGames()
+    const response = await serverSideApi.get<GAME_DTO[]>('/games',)
+    const games = response.data || []
 
     return (
         <div className="max-w-[1424px] px-10 mx-auto flex flex-col items-center  min-h-screen justify-center max-sm:px-0">

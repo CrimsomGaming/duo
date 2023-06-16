@@ -37,11 +37,13 @@ const newGameAdFormSchema = z.object({
 type newGameAdFormSchemaData = z.input <typeof newGameAdFormSchema>
 
 interface CreateAdModalProps {
-    onClose: (gameSelected?: string) => void
+    onClose: (gameSelected?: string, gameCreated?:boolean) => void
 }
 
 export function CreateAdModal({ onClose }:CreateAdModalProps) {
     const token = Cookies.get('token')
+    
+
     
     const [games,setGames] = useState<GAME_DTO[]>([])
     async function fetchGames(){
@@ -89,15 +91,16 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
         setValue('weekDays', weekDaysUpdated)
     }
 
-    function handleCloseModal(gameId: number){
+    function handleCloseModal(gameId: number,gameCreated: boolean){
         const gameSelected = games.find(game => game.id === gameId)
-        onClose(gameSelected?.name)
+        onClose(gameSelected?.name,gameCreated)
     }
 
   
     async function handleCreateNewAd(formData: newGameAdFormSchemaData){
+        let gameCreated = false
         try {
-           await api.post('/games/add', {
+            await api.post('/announcements', {
                game_id: formData.gameId,
                nickname: formData.nickname,
                play_since: formData.timePlayed,
@@ -105,17 +108,15 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                play_period_start: formData.startHour,
                play_period_end: formData.endHour,
                voice_chat: formData.enableChatVoice
-           },{
-               headers: {
-                   Authorization: `Bearer ${token}`
-               }
-           })
+            },
+           )
+           gameCreated = true
          
         } catch (error) {
             console.log(error)
         }
         finally {
-            handleCloseModal(Number(formData.gameId))
+            handleCloseModal(Number(formData.gameId), gameCreated)
         }
     }
 
@@ -146,9 +147,10 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                                 <option disabled value="ddddd">Selecione o game que deseja jogar</option>
                                 {
                                     games.map(game => (
-                                        <option key={game.id} value={game.id}>{game.name}</option>
+                                        <option key={game.id} value={Number(game.id)}> {game.name} </option>
                                     ))
                                 }
+                              
 
                             </select>
                             {errors.gameId && errors.gameId.message && (

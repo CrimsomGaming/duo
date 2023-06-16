@@ -1,4 +1,5 @@
 import { api } from "@/libs/api";
+import { serverSideApi } from "@/libs/serverSideApi";
 import axios from "axios";
 import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 import { cookies } from "next/headers";
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest ){
 
     const redirectURL = redirectTo  || new URL('/home', request.url)
 
-    const authResponse = await api.post<AuthResponseProps>('/auth/login',{
+    const authResponse = await serverSideApi.post<AuthResponseProps>('/auth/login',{
         code: code,
     })
 

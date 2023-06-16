@@ -13,7 +13,6 @@ import { UnauthorizedModal } from "@/components/UnauthorizedModal";
 
 
 import { Popover } from "./Popover";
-import { Heading } from "@/components/Heading";
 import { Toast } from "@/components/Toast";
 
 export interface CardProps {
@@ -36,6 +35,9 @@ export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userI
     const [clipboardContent, setClipboardContent] = useState('')
 
     const [nameWithoutDiscriminator] = user.split('#')
+    const nameFormated = nameWithoutDiscriminator.length > 16 ? nameWithoutDiscriminator.slice(0,16).concat('...') : nameWithoutDiscriminator
+
+
     const startTimeFormated = avaliable.startTime.replace(/:\d{2}$/, "")
     const endtimeFormated = avaliable.endTime.replace(/:\d{2}$/, "")
 
@@ -56,7 +58,7 @@ export function Card({ user, avaliable, timePlayed, useChatVoice, nickName,userI
                 <Text className="block" type="secondary">Nome</Text>
                 <Text className="font-bold" asChild>
                     <strong>
-                        {nameWithoutDiscriminator}
+                        {nameFormated}
                     </strong>
                 </Text>
             </div>

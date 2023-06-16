@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import { cookies } from 'next/headers'
+import { api } from './api'
 
 interface User {
   username: string
@@ -12,7 +13,6 @@ export function getUser(): User | undefined {
 
   if (!token) return undefined
   
-
   const user = jwtDecode<User>(token)
 
   return {

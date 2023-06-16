@@ -13,20 +13,24 @@ import { UnauthorizedModal } from '@/components/UnauthorizedModal'
 import { CreateAdModal } from './CreateAdModal'
 import { Toast } from '@/components/Toast'
 
+
 export function CreateAdBanner() {
     const token = Cookies.get('token')
-    const [gameSelect, setGameSelect] = useState('')
+    const [gameSelect, setGameSelect] = useState<string>()
+    const [gameWasCreated, setGameWasCreated] = useState(false)
     const [toastVisibility, setToastVisibility] = useState(false)
     
     const useIsLoged = !!token
     const [AdModalIsVisible, setAdModalIsVisible] = useState(false)
 
 
-    function handleCloseModal(gameSelected?: string){
+    function handleCloseModal(gameSelected?: string, gameCreated = false){
         setAdModalIsVisible(false)
         setToastVisibility(true)
+        setGameWasCreated(gameCreated)
         setGameSelect(gameSelected as string)
     }
+
 
     return (
         <footer className='rounded-xl rounded-t-lg rounde  self-stretch  pt-1 bg-nlw-gradient items-center'>
@@ -81,9 +85,12 @@ export function CreateAdBanner() {
                     <Toast
                         open={toastVisibility}
                         onOpenChange={setToastVisibility}
+                        
                         onClick={() => {setToastVisibility(false)}}
-                        title='Anuncio Criado'
-                        description={`Você criou um novo annúncio de ${gameSelect}`}
+                        title={gameWasCreated ? 'Anuncio Criado' : 'Erro ao criar anúncio'}
+                        description={gameWasCreated 
+                            ?  `Você criou um novo annúncio de ${gameSelect}`
+                            : `Infelizmente não cosegui criar o  annúncio de ${gameSelect}`}
                         
                     />
 
