@@ -6,7 +6,7 @@ from .managers import CustomUserManager
 
 class User(AbstractBaseUser):
     id = models.BigIntegerField(unique=True, primary_key=True)
-    username = models.CharField(max_length=32)
+    username = models.CharField(max_length=128)
     email = models.EmailField(max_length=255)
     global_name = models.CharField(max_length=64, null=True, blank=True)
     avatar = models.CharField(max_length=32)

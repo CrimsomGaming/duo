@@ -52,25 +52,24 @@ class OrderingTestCase(AbstractAnnouncementTestCase):
         self.manager = Announcement.objects
     
     def create_user_ann(self, **kwargs):
-        return (
-            Announcement.objects.create(
-                game=self.game,
-                user_id=kwargs.get('id'),
-                nickname='nick',
-                play_period_start=time(kwargs.get('start', 0)),
-                play_period_end=time(kwargs.get('end', 1)),
-                play_since=kwargs.get('since', 1),
-                voice_chat=kwargs.get('voice_chat', False)
-            ),
-            User.objects.create(
-                id=kwargs.get('id'),
-                username=kwargs.get('username', 'test-generic'),
-                email='hello@world.com',
-                global_name=None,
-                avatar='atavar',
-                discriminator='0000'
-            )
+        user = User.objects.create(
+            id=kwargs.get('id'),
+            username=kwargs.get('username', 'test-generic'),
+            email='hello@world.com',
+            global_name=None,
+            avatar='atavar',
+            discriminator='0000'
         )
+        ann = Announcement.objects.create(
+            game=self.game,
+            user=user,
+            nickname='nick',
+            play_period_start=time(kwargs.get('start', 0)),
+            play_period_end=time(kwargs.get('end', 1)),
+            play_since=kwargs.get('since', 1),
+            voice_chat=kwargs.get('voice_chat', False)
+        ) 
+        return ann, user
 
     def test_order_by_score(self):
         """
