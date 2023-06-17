@@ -25,7 +25,7 @@ export default function Home() {
           <div className='flex flex-col gap-4 mt-5'>
             <LinkButton 
             className='w-full'
-              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=https%3A%2F%2Fduo-lake.vercel.app%2Fapi%2Fauth%2Fcallback&response_type=code&scope=identify`}
+            href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_REDIRECT_DISCORD_URI}`}
             >
               <Image alt='icone do aplicativo discord' src={DiscordIcon}/>
               Entrar com Discord
