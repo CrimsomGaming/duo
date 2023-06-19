@@ -101,6 +101,7 @@ celerybeat-schedule.*
 .venv 
 env/ 
 venv/ 
+dev_venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
