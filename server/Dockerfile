@@ -1,20 +1,24 @@
-FROM python:3.8-slim-buster
+ARG PYTHON_VERSION=3.8-slim-buster
+
+FROM python:${PYTHON_VERSION}
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN mkdir -p /app
+
 WORKDIR /app
 
-COPY requirements-dev.txt /app
-RUN pip install -r requirements-dev.txt
-
+RUN apt update
+RUN apt install -y python3-dev default-libmysqlclient-dev build-essential
+COPY requirements.txt /tmp/requirements.txt
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
 COPY ./application /app
 
 EXPOSE 8000
 
-RUN python manage.py migrate
-RUN python manage.py createsuperuser --admin_username=admin --id=1 --password=0000 --noinput
-RUN python manage.py seed_users
-RUN python manage.py seed_games
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN python manage.py migrate 
+CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "application.wsgi"]
