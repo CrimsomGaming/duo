@@ -1,4 +1,9 @@
-./application/db.sqlite3
-./application/.coverage
-./application/media/
-./venv
+fly.toml
+.git/
+*.sqlite3
+test.sh
+build.sh
+venv/
+dev_venv/
+requirements-dev.txt
+/application/media
