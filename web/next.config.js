@@ -6,6 +6,11 @@ const nextConfig = {
                 hostname: 'localhost',
                 protocol: 'http',
              
+            },
+            {
+                hostname: 'marconi-duo.s3.amazonaws.com',
+                protocol: 'https',
+             
             }
         ]
     }
