@@ -14,7 +14,14 @@ GAME_BANNERS_DIR = os.path.join(BASE_DIR, game_img_dir)
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument('--model', type=bool)
+
     def handle(self, *args, **kwargs):
+        if kwargs.get('model'):
+            self.stdout.write('Seeding games model only...')
+            return self.create_games()
+
         self.clear_games_models()
         self.stdout.write('Creating games...')
         self.create_games()

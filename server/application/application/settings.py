@@ -105,6 +105,9 @@ DATABASES = {
     }
 }
 
+if DEBUG:
+    DATABASES['default'].pop('OPTIONS')
+
 AUTH_USER_MODEL = 'discordauth.User'
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -175,3 +178,12 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
+
+# Storages
+AWS_S3_ACCESS_KEY_ID = os.getenv('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = os.getenv('AWS_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+STORAGES = {"default": {
+    "BACKEND": os.getenv('DEFAULT_FILE_STORAGE', "django.core.files.storage.FileSystemStorage")}
+}
