@@ -202,7 +202,7 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
 
                             <div className='flex flex-col  gap-y-2 flex-1'>
                                 <label className='font-semibold'>Qual horário do dia</label>
-                                <div className='grid grid-cols-2  gap-x-2'>
+                                <div className='grid grid-cols-2  gap-2 max-sm:grid-cols-1'>
                                     <TextInput.Input
                                         {...register('startHour')}
                                         type="time"
@@ -234,12 +234,12 @@ export function CreateAdModal({ onClose }:CreateAdModalProps) {
                     </label>
                     <footer className='flex justify-end gap-x-4 mt-8'>
                         <Dialog.Close asChild>
-                            <button type='button' className='py-4 px-[20px] bg-zinc-500 font-semibold  rounded-md'>Cancelar</button>
+                            <button type='button' className='py-4 px-[20px] bg-zinc-500 font-semibold  rounded-md '>Cancelar</button>
                         </Dialog.Close>                       
                             <Button 
                                 disabled={isSubmitting}
                                 type='submit' 
-                                className='w-max'
+                            className='w-max max-sm:w-full'
                             >
                                 <Gamepad2 size={24} />
                                 Encontrar duo
