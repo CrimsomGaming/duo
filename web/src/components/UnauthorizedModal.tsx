@@ -55,15 +55,14 @@ export function UnauthorizedModal({ title, content }: UnauthorizedModalProps){
                     {content}
                 </Text>
             </div>
-
-            <LinkButton
-                className='mt-2'
-                href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_REDIRECT_DISCORD_URI}`}
-            >
-                    <Image alt='icone do aplicativo discord' src={DiscordIcon} />   
+                <LinkButton
+                    className='w-full'
+                    href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_DISCORD_URI}`}
+                >
+                    <Image alt='icone do aplicativo discord' src={DiscordIcon} />
                     Entrar com Discord
-            </LinkButton>
-               
+
+                </LinkButton>
             
         </Dialog.Content>
     </Dialog.Portal>
