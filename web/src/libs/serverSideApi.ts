@@ -36,7 +36,7 @@ serverSideApi.interceptors.response.use(
     if (requestError.response?.status === 401) {
         const originalRequestConfig = requestError.config as InternalAxiosRequestConfig;
         originalRequestConfig.headers.Authorization = ''
-        serverSideApi(originalRequestConfig)
+        await serverSideApi(originalRequestConfig)
 
       }
 

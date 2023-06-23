@@ -51,10 +51,10 @@ export function CreateAdBanner() {
                 </div>
 
                 {
-                    useIsLoged ? (
+                    !useIsLoged ? (
                         <Dialog.Root open={AdModalIsVisible} onOpenChange={event => setAdModalIsVisible(event)}>
                             <Dialog.Trigger asChild>
-                                <Button className='w-max'  >
+                                <Button className='w-max max-sm:w-full'  >
                                     <ZoomIn size={24} />
                                     <span className='text-white font-medium text-lg '>Publicar anúncio</span>
                                 </Button>
@@ -67,7 +67,7 @@ export function CreateAdBanner() {
 
                             <Dialog.Root>
                                 <Dialog.Trigger asChild>
-                                    <Button className='w-max'  >
+                                    <Button className='w-max max-sm:w-full '  >
                                         <ZoomIn size={24} />
                                         <span className='text-white font-medium text-lg '>Publicar anúncio</span>
                                     </Button>

@@ -23,7 +23,7 @@ export default async function Home() {
     const games = response.data || []
 
     return (
-        <div className="max-w-[1424px] px-10 mx-auto flex flex-col items-center  min-h-screen justify-center max-sm:px-0">
+        <div className="max-w-[1424px] px-10 mx-auto flex flex-col items-center  min-h-screen justify-center max-sm:px-2 max-sm:justify-start max-sm:mt-28 max-sm:min-h-max">
 
             <Heading size='6xl' className='max-md:text-4xl'  asChild>
                 <h1 >
