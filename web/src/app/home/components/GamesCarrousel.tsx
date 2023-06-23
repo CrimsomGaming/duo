@@ -32,7 +32,7 @@ export function GamesCarousell({games }: GamesCarousellProps){
 
             '(max-width: 480px)': {
                 slides: {
-                    perView: 1.1,
+                    perView: 1.2,
                     spacing: 16,
 
                 }
