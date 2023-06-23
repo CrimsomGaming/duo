@@ -51,7 +51,7 @@ export function CreateAdBanner() {
                 </div>
 
                 {
-                    !useIsLoged ? (
+                    useIsLoged ? (
                         <Dialog.Root open={AdModalIsVisible} onOpenChange={event => setAdModalIsVisible(event)}>
                             <Dialog.Trigger asChild>
                                 <Button className='w-max max-sm:w-full'  >
