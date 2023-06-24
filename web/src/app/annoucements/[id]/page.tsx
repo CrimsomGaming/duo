@@ -24,13 +24,8 @@ interface gameResponse {
 export async function generateMetadata({ params }: AnnoucementsProps) {
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}games/${params.id}`, {
-            
-            next: {
-                revalidate: 60 * 60 * 24 * 90 // 90 days
-            }
-        })
-        const data: gameResponse = await response.json()
+        const response = await serverSideApi(`games/${params.id}`)
+        const data: gameResponse = response.data
         return {
             title: data.game.name 
         }
