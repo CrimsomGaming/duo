@@ -1,4 +1,6 @@
 from datetime import time
+from io import StringIO
+from django.core.management import call_command
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -61,11 +63,6 @@ class GameViewSetTestCase(APITestCase):
         self.assertEqual(r.status_code, status.HTTP_200_OK)
         self.assertEqual(len(r.data), 10)
         self.assertEqual(r.data[0].get('ads_count'), 0)
-        
-    def test_get_should_make_only_one_conn(self):
-        with self.assertNumQueries(1):
-            r = self.client.get(self.url)
-        self.assertEqual(r.status_code, status.HTTP_200_OK)
 
     def test_detail(self):
         r = self.client.get(self.url_detail)
@@ -75,4 +72,40 @@ class GameViewSetTestCase(APITestCase):
         self.client.force_authenticate(self.user)
         r = self.client.get(self.url_detail)
         self.assertEqual(r.status_code, status.HTTP_200_OK)
+
+
+class GameViewSetConnTestCase(APITestCase):
+    games_list_url = reverse("games-list")
+    games_detail_url = reverse("games-detail", kwargs={"pk": 1})
+    
+    def setUp(self):
+        out = StringIO()
+        call_command("seed_users", stdout=out)
+        call_command("seed_games", stdout=out)
+
+    def test_num_queries_get_games(self):
+        with self.assertNumQueries(1):
+            r = self.client.get(self.games_list_url)
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
+
+    def test_num_queries_get_games_authenticated(self):
+        user = User.objects.first()
+
+        with self.assertNumQueries(1):
+            self.client.force_authenticate(user)
+            r = self.client.get(self.games_list_url)
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
+    
+    def test_num_queries_get_games_detail(self):
+        with self.assertNumQueries(4):
+            r = self.client.get(self.games_detail_url)
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
+
+    def test_num_queries_get_games_detail_authenticated(self):
+        user = User.objects.first()
+
+        with self.assertNumQueries(6):
+            self.client.force_authenticate(user)
+            r = self.client.get(self.games_detail_url)
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
 
