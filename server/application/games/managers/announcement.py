@@ -14,7 +14,11 @@ class AnnouncementManager(AnnouncementScoreManagerMixin):
         return (ann.play_period_start, ann.play_period_end)
      
     def order_by_score(self, game, user): 
-        anns = self._annotate_default_ordering_fields(game)
+        anns = (
+            self._annotate_default_ordering_fields(game)
+            .select_related("game", "user")
+            .prefetch_related("play_weekdays")
+        )
         user_ann, user_has_ann = self.get_user_announcement(game, user)
 
         if user_has_ann:
