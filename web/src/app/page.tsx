@@ -21,7 +21,7 @@ export default function Home() {
       </aside>
     
         <main className='w-full max-w-[328px] flex flex-col mx-auto  max-sm:mt-10'>
-        <Heading size='xl' className='font-bold text-center '>Encontre sue <span className='bg-nlw-gradient bg-clip-text text-transparent'>duo</span></Heading>
+        <Heading size='xl' className='font-bold text-center '>Encontre seu <span className='bg-nlw-gradient bg-clip-text text-transparent'>duo</span></Heading>
           <div className='flex flex-col gap-4 mt-5'>
             <LinkButton 
               className='w-full'
